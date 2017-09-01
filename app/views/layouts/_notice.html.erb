@@ -1,0 +1,5 @@
+<% flash.each do |key, value| %>
+  <% if key != 'timedout' %>
+    <div class="alert alert-info flash fade-in" id="notice"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><%= value %></strong></div>
+  <% end %>
+<% end %>

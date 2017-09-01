@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  time: MyString
+  latitude: 1.5
+  longitude: 1.5
+  dust: 1.5
+  humidity: 1
+  temperature: 1
+
+two:
+  time: MyString
+  latitude: 1.5
+  longitude: 1.5
+  dust: 1.5
+  humidity: 1
+  temperature: 1

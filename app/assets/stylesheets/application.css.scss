@@ -1,0 +1,45 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+#sign_in_form {
+    text-align:center;  
+    font-family: "Courier New", Monospace;
+}
+body.sign_in {
+    background: url("background.jpg") no-repeat center center fixed; 
+    background-size: 100% 100%; 
+}
+
+.center {
+    display:inline-block;
+    padding-right: 15px;
+}
+
+#menu {
+  width: 100%;
+}
+  
+.button {
+  color: #000;
+  width: 100px;
+  height: 30px;
+  /*add any other properties you want to style*/
+}
+
+div.container {
+  padding-left: 100px;
+}
+
+.panel-body {
+  height:300px;
+  overflow-y:scroll;
+  width:100%;
+}
+
+.form-inline {
+  text-align:center;
+}
+
+#get-data-form {
+  width: 200px;
+}

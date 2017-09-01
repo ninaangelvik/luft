@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="col-sm-3 col-md-6 col-lg-4">
+  <h4><center>Opplastede filer</center></h4>
+    <div class="panel-body">
+    <hr>
+      <% @files.each do |file| %>
+          <p><%= file.displayname %> &nbsp; <%= link_to home_download_path id: file.id do %> <i class="glyphicon glyphicon-download-alt" style="font-size:20px;color:darkgrey;" title="Last ned"></i> <% end %></p>
+        
+        <hr>  
+      <% end %>
+    </div>
+  </div>
+  <div class="col-sm-9 col-md-6 col-lg-8">
+    <h4><center>Hent ut data</center></h4>
+    <div id="get-data-form">
+      <form action="<%=files_get_data_path%>">
+        Fra:<br>
+        <input type="text" name="fromtime" placeholder="01.01.2017">
+        <br>
+        Til:<br>
+        <input type="text" name="totime" placeholder="02.01.2017">
+        <br><br>
+        <input type="submit" value="Hent data" class="btn btn-primary">
+      </form> 
+    </div>
+  </div>
+</div>
