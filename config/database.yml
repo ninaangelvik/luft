@@ -4,6 +4,11 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 #
+default: &default
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+
 mysql_settings: &mysql_settings
   adapter: mysql2
   encoding: utf8
@@ -14,10 +19,15 @@ mysql_settings: &mysql_settings
   database: <%= ENV["MYSQL_DATABASE"] %>
   socket: <%= ENV["MYSQL_SOCKET_PATH"] %>  
 
-default: &default
-  adapter: sqlite3
+development:
+  adapter: mysql2
+  encoding: utf8
   pool: 5
   timeout: 5000
+  username: test
+  password: test12345
+  database: masteroppgave
+  socket: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt  
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -26,10 +36,5 @@ test:
   <<: *default
   database: db/test.sqlite3
 
-development:
-  <<: *mysql_settings
-
-
 production:
   <<: *mysql_settings
-  

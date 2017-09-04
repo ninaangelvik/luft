@@ -27,8 +27,6 @@ class DatafilesController < ApplicationController
           new_filename = filename + "-" + num_versions.to_s + "." + filetype 
           @file.update_attribute("displayname", new_filename)
         end
-        Rails.cache.write(@file.id, @file)
-        Resque.enqueue(ImportToDatabase, @file.id)
         flash[:success] = "Filen ble lastet opp"
       else 
         flash[:error] = "Filen kunne ikke lastes opp"

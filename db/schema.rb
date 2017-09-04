@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -13,16 +12,16 @@
 
 ActiveRecord::Schema.define(version: 20170207134747) do
 
-  create_table "datafiles", force: :cascade do |t|
-    t.string   "filename",    null: false
-    t.binary   "data",        null: false
+  create_table "datafiles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "filename",                  null: false
+    t.binary   "data",        limit: 65535, null: false
     t.string   "filetype"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.string   "displayname"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -35,23 +34,21 @@ ActiveRecord::Schema.define(version: 20170207134747) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-
-  create_table "weather_data", force: :cascade do |t|
-    t.float    "latitude"
-    t.float    "longitude"
-    t.float    "dust"
-    t.integer  "humidity"
-    t.integer  "temperature"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "group_name"
+  create_table "weather_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.float    "latitude",    limit: 24, null: false
+    t.float    "longitude",   limit: 24, null: false
+    t.float    "dust",        limit: 24, null: false
+    t.integer  "humidity",               null: false
+    t.integer  "temperature",            null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "group"
     t.datetime "timestamp"
+    t.index ["latitude", "longitude"], name: "index_weather_data_on_time_and_latitude_and_longitude", unique: true, using: :btree
   end
-
-  add_index "weather_data", ["latitude", "longitude"], name: "index_weather_data_on_time_and_latitude_and_longitude", unique: true
 
 end

@@ -1,7 +1,5 @@
 class HomeController < ApplicationController
   def index
-    ImportToDatabaseJob.perform_later("Nina")
-    render plain: 'OK'
   end
 
   def download
@@ -16,4 +14,7 @@ class HomeController < ApplicationController
     send_file(Rails.root.join('tmp', '#{file.filename}.csv'), :filename => file.filename)
   end
 
+  def health
+    head :ok, content_type: "text/html"
+  end
 end
