@@ -25,6 +25,8 @@ class DatafilesController < ApplicationController
        
 
       if datafile.save
+        ProcessInputJob.perform_later(input_file.read)
+
         flash[:success] = "Filen ble lastet opp"
         redirect_to root_path
       end

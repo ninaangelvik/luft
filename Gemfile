@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.3.4'
+ruby '2.4.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '>= 5.0.0.rc2', '< 5.1'
@@ -7,10 +7,10 @@ gem 'rails', '>= 5.0.0.rc2', '< 5.1'
 # Database gems 
 gem 'sqlite3', group: :development
 gem 'mysql2', group: :production
-gem "sequel", group: :production
+gem 'sequel', group: :production
 
 
-gem "appengine", "~> 0.4.1"
+gem 'appengine', "~> 0.4.1"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -34,9 +34,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
 
-# Use devise to handle user registration and log-in
-gem 'devise'
-
 # Use rails_12factor to set logger to standard out 
 gem 'rails_12factor', group: :production
 
@@ -53,3 +50,9 @@ group :development do
   gem 'spring'
 end
 
+
+# Added at 2017-09-05 12:47:25 +0200 by nina:
+gem "activejob-google_cloud_pubsub", "~> 0.5.0"
+
+# Added at 2017-09-05 12:49:56 +0200 by nina:
+gem "foreman", "~> 0.64.0"
