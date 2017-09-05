@@ -1,40 +1,39 @@
 require 'csv'
-class DatafilesController < ApplicationController
+class DatafilesController < ApplicationController  
   def index 
     @files = Datafile.all
   end 
 
   def create
-    @file = Datafile.new(file_params) do |t|
-      if params[:datafile][:file]
-        t.data      = params[:datafile][:file].read
-        t.filename  = params[:datafile][:file].original_filename
-        t.displayname = params[:datafile][:file].original_filename
-        t.filetype = params[:datafile][:file].content_type
-      end
+    input_file = params[:datafile][:file]
+    
+    if input_file.content_type != "text/csv"
+      flash[:error] = "Filen er ikke av type '.csv'. Vennligst prøv en annen fil."
+      redirect_to root_path and return
     end
-    if @file.nil?
-      flash[:error] = "Fil er ikke angitt."
-      redirect_to root_path
-    elsif @file.filetype != "text/csv"
-      flash[:success] = "Kunne ikke laste opp fil grunnet feil filformat."
-      redirect_to root_path
-    else
-      if @file.save
-        num_versions = Datafile.where("filename = ?", @file.filename).count
-        filename, filetype = @file.filename.split(".")
-        if num_versions > 1
-          new_filename = filename + "-" + num_versions.to_s + "." + filetype 
-          @file.update_attribute("displayname", new_filename)
-        end
-        flash[:success] = "Filen ble lastet opp"
-      else 
-        flash[:error] = "Filen kunne ikke lastes opp"
-      end
-      redirect_to root_path
-    end
-  end
 
+    begin 
+      datafile = Datafile.new do |f| 
+        f.filename = input_file.original_filename
+        f.displayname = input_file.original_filename
+        f.filetype = input_file.content_type
+        f.size = input_file.size
+        f.school = "Kongsbakken VGS"
+        f.group = "Powderpuffs"
+        f.url = "/files/hei"
+      end
+       
+
+      if datafile.save
+        flash[:success] = "Filen ble lastet opp"
+        redirect_to root_path
+      end
+    rescue => error
+      flash[:error] = "Filen kunne ikke lastes opp. #{error.to_s}"
+      redirect_to root_path
+    end
+  end  
+  
   def get_data
     from_date = params[:fromtime].split(".")
     to_date = params[:totime].split(".")
@@ -66,9 +65,4 @@ class DatafilesController < ApplicationController
 
     send_file(Rails.root.join('tmp', 'file_ids.csv'))
   end
-
-  private
-    def file_params
-      params.require(:datafile).permit(:data, :filename, :filetype)
-    end
 end

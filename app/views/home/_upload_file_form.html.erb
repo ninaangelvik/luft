@@ -6,7 +6,7 @@
     </div>
 
     <div class="container-fluid">
-      <%= form_for file, :url => {:controller => "datafiles", :action => "create"},:html => { :multipart => true } do |f| %>
+      <%= form_for file, :url => {:controller => "datafiles", :action => "create"},:html => { :multipart => true} do |f| %>
         <p> 
           <%= f.file_field :file, required: true, accept: '.csv'%> 
         </p> 
