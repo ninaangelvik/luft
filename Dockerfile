@@ -25,7 +25,7 @@ RUN if test -n "$REQUESTED_RUBY_VERSION" -a \
       && gem install -q --no-rdoc --no-ri bundler --version $BUNDLER_VERSION \
       && gem install -q --no-rdoc --no-ri foreman --version 0.64.0 \
 
-      && apt-get clean \
+      && DEBIAN_FRONTEND=noninteractive apt-get clean \
       && rm -f /var/lib/apt/lists/*_*; \
     fi
 ENV RBENV_VERSION=${REQUESTED_RUBY_VERSION:-$RBENV_VERSION}

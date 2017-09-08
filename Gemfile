@@ -9,7 +9,6 @@ gem 'sqlite3', group: :development
 gem 'mysql2', group: :production
 gem 'sequel', group: :production
 
-
 gem 'appengine', "~> 0.4.1"
 
 # Use SCSS for stylesheets
@@ -21,7 +20,8 @@ gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
-gem 'aws-sdk-v1'
+gem 'gcloud'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -50,9 +50,9 @@ group :development do
   gem 'spring'
 end
 
-
-# Added at 2017-09-05 12:47:25 +0200 by nina:
-gem "activejob-google_cloud_pubsub", "~> 0.5.0"
-
 # Added at 2017-09-05 12:49:56 +0200 by nina:
 gem "foreman", "~> 0.64.0"
+
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "fog"

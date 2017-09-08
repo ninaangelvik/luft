@@ -1,0 +1,15 @@
+default: &default
+  project_id: masteroppgave-177911
+  oauth2:
+    client_id: 988338612156-em58nsounhjck73vvp0k8chsvcsualol.apps.googleusercontent.com
+    client_secret: PQF6oAeXtzCY9ErZ80pAWTlW
+  cloud_storage:
+    bucket: masteroppgave-177911
+    access_key_id: GOOGQXILRGS2TO7KUVN4
+    secret_access_key: 0CP3+8gETD4fvc5IiO3sUCxqTAfjD/Pr7E8nZaIi
+
+development:
+  <<: *default
+
+production:
+  <<: *default

@@ -20,17 +20,28 @@ class DatafilesController < ApplicationController
         f.size = input_file.size
         f.school = "Kongsbakken VGS"
         f.group = "Powderpuffs"
-        f.url = "/files/hei"
+        f.url = "files/#{f.school}/#{f.group}/#{f.filename}"
       end
        
-
       if datafile.save
-        ProcessInputJob.perform_later(input_file.read)
+        file = StorageBucket.files.new(
+          key: "files/#{datafile.school}/#{datafile.group}/#{datafile.filename}",
+          body: input_file.read,
+          public: false
+        )
 
-        flash[:success] = "Filen ble lastet opp"
-        redirect_to root_path
+        if file.save
+          ProcessInputJob.perform_later(datafile.url)
+          flash[:success] = "Filen ble lastet opp"
+          redirect_to root_path
+        else
+          flash[:success] = "Noe gikk galt"
+          redirect_to root_path
+        end
       end
     rescue => error
+      pp "----------------"
+      pp error.to_s
       flash[:error] = "Filen kunne ikke lastes opp. #{error.to_s}"
       redirect_to root_path
     end
