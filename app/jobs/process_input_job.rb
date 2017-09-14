@@ -6,6 +6,7 @@ class ProcessInputJob < ActiveJob::Base
     begin 
       csv_text = data.split("\n")
       csv_text.each do |line|
+        pp line
         if line.include? "Time" or line.blank?
           next
         end
@@ -32,8 +33,9 @@ class ProcessInputJob < ActiveJob::Base
           end
         end
       end
+      return true
     rescue => e
-      puts e
+      return e
     end
   end
 end
