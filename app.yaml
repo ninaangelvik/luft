@@ -8,6 +8,9 @@ env_variables:
   MYSQL_PASSWORD: eitheigaip4Ex4es5aideweigu4Oopho
   MYSQL_DATABASE: masteroppgave
   MYSQL_SOCKET_PATH: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt
+  PUBSUB_TOPIC: ProcessInputQueue
+  PUBSUB_VERIFICATION_TOKEN: chaecoleix9Ooghoa2mah8ohshooZein
+
 
 health_check:
   enable_health_check: true

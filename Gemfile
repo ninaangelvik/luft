@@ -2,11 +2,11 @@ source 'https://rubygems.org'
 ruby '2.4.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 5.0.0.rc2', '< 5.1'
+gem 'rails', '4.2.8'
 
 # Database gems 
 gem 'sqlite3', group: :development
-gem 'mysql2', group: :production
+gem 'mysql2', '~> 0.4.8', group: :production
 gem 'sequel', group: :production
 
 gem 'appengine', "~> 0.4.1"
@@ -56,3 +56,4 @@ gem "foreman", "~> 0.64.0"
 gem "omniauth"
 gem "omniauth-google-oauth2"
 gem "fog"
+gem 'google-cloud-pubsub', require: 'google/cloud/pubsub'
