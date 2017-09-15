@@ -10,8 +10,8 @@ FROM gcr.io/google-appengine/ruby:latest
 
 # If your application requires a specific ruby version (compatible with rbenv),
 # set it here. Leave blank to use the currently recommended default.
-ARG REQUESTED_RUBY_VERSION="2.4.0"
-
+ARG REQUESTED_RUBY_VERSION="2.4.1"
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 # Install any requested ruby if not already preinstalled by the base image.
 # Tries installing a prebuilt package first, then falls back to a source build.
 RUN if test -n "$REQUESTED_RUBY_VERSION" -a \

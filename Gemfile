@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.4.0'
+ruby '2.4.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.8'
@@ -56,3 +56,4 @@ gem "omniauth"
 gem "omniauth-google-oauth2"
 gem "fog"
 gem 'google-cloud-pubsub', require: 'google/cloud/pubsub'
+gem "google-api-client", "~> 0.13.6"

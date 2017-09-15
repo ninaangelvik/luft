@@ -14,34 +14,24 @@ class DatafilesController < ApplicationController
 
     begin 
       datafile = Datafile.new do |f| 
-        f.filename = input_file.original_filename
-        f.displayname = input_file.original_filename
+        f.filename = generate_filename(input_file.original_filename)
         f.filetype = input_file.content_type
         f.size = input_file.size
-        f.school = "Kongsbakken VGS"
-        f.group = "Powderpuffs"
-        f.url = "files/#{f.school}/#{f.group}/#{f.filename}"
       end
        
       if datafile.save
         file = StorageBucket.files.new(
-          key: "files/#{datafile.school}/#{datafile.group}/#{datafile.filename}",
+          key: "#{datafile.filename}",
           body: input_file.read,
           public: false
         )
-
         if file.save
-          ProcessInputJob.perform_later(datafile.url)
+          ProcessInputJob.perform_later(datafile.filename)
           flash[:success] = "Filen ble lastet opp"
-          redirect_to root_path
-        else
-          flash[:success] = "Noe gikk galt"
           redirect_to root_path
         end
       end
     rescue => error
-      pp "----------------"
-      pp error.to_s
       flash[:error] = "Filen kunne ikke lastes opp. #{error.to_s}"
       redirect_to root_path
     end
@@ -77,5 +67,20 @@ class DatafilesController < ApplicationController
     end
 
     send_file(Rails.root.join('tmp', 'file_ids.csv'))
+  end
+
+  private
+
+  def generate_filename(filename)
+    existing_files = Datafile.where(filename: filename)
+
+    unless existing_files.empty?
+      ext = File.extname(filename)
+      basename = File.basename(filename, ext)
+
+      return "#{basename}(#{existing_files.count})#{ext}"
+    else 
+      return filename
+    end
   end
 end

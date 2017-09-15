@@ -1,4 +1,4 @@
-entrypoint: bundle exec foreman start
+entrypoint: bundle exec foreman start --formation "$FORMATION"
 env: flex
 runtime: custom
 
@@ -10,6 +10,7 @@ env_variables:
   MYSQL_SOCKET_PATH: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt
   PUBSUB_TOPIC: ProcessInputQueue
   PUBSUB_VERIFICATION_TOKEN: chaecoleix9Ooghoa2mah8ohshooZein
+  FORMATION: web=1
 
 
 health_check:

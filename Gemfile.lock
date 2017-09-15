@@ -511,6 +511,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   fog
   foreman (~> 0.64.0)
+  google-api-client (~> 0.13.6)
   google-cloud
   google-cloud-pubsub
   jbuilder (~> 2.0)
@@ -530,7 +531,7 @@ DEPENDENCIES
   web-console (~> 3.0)
 
 RUBY VERSION
-   ruby 2.4.0p0
+   ruby 2.4.1p111
 
 BUNDLED WITH
    1.16.0.pre.2

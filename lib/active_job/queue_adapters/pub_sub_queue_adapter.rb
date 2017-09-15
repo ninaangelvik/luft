@@ -7,22 +7,19 @@ module ActiveJob
       def self.pubsub
         project_id = Rails.application.config.x.settings["project_id"]
         pubsub     = Google::Cloud::Pubsub.new project: project_id
-        # pp pubsub.topics
-        # pp "***************'"
+        
         topic = pubsub.topic "ProcessInputQueue" 
         pubsub.create_topic "ProcessInputQueue" unless topic.exists?
-        # pp "***********"
-        # pp pubsub.topic("ProcessInputQueue")
+        
         pubsub
       end
 
       def self.enqueue job
         Rails.logger.info "[PubSubQueueAdapter] enqueue job #{job.inspect}"
-        pp "-------------------------"
-        url  = job.arguments.first
+        filename  = job.arguments.first
         topic = pubsub.topic "ProcessInputQueue"
-        pp topic
-        topic.publish url
+        topic = pubsub.create_topic "ProcessInputQueue" unless topic.exists?
+        topic.publish filename
       end
 
       def self.run_worker!
@@ -34,15 +31,11 @@ module ActiveJob
         subscription = topic.subscription "InputSubscription"
         topic.create_subscription "InputSubscription" unless subscription.exists? 
 
-        # pp subscription
         subscription.pull.each do |message|
           Rails.logger.info "Process input request (#{message.data})"
-          # pp message
-
-          url  = message.data
-          data = StorageBucket.files.first
-          pp data.read
-          ret = ProcessInputJob.perform_now data if data
+          filename  = message.data
+          file = StorageBucket.files.get(filename)
+          ret = ProcessInputJob.perform_now file.body unless file.nil?
 
           message.acknowledge! if ret == true
           unless ret == true
