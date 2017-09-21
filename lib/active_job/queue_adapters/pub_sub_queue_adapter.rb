@@ -18,20 +18,21 @@ module ActiveJob
         Rails.logger.info "[PubSubQueueAdapter] enqueue job #{job.inspect}"
         filename  = job.arguments.first
         topic = pubsub.topic "ProcessInputQueue"
-        topic = pubsub.create_topic "ProcessInputQueue" unless topic.exists?
         topic.publish filename
       end
 
       def self.run_worker!
-        pp "Entering run_worker!"
         Rails.logger.info "Running worker to process input"
 
         topic        = pubsub.topic "ProcessInputQueue"
         
-        subscription = topic.subscription "InputSubscription"
-        topic.create_subscription "InputSubscription" unless subscription.exists? 
+        subscription = pubsub.subscription "InputSubscription"
+        subscription = topic.create_subscription "InputSubscription" unless subscription.exists? 
 
-        subscription.pull.each do |message|
+        
+        # subscriber = subscription.listen do |message|
+        msgs = subscription.wait_for_messages 
+        msgs.each do |message|
           Rails.logger.info "Process input request (#{message.data})"
           filename  = message.data
           file = StorageBucket.files.get(filename)

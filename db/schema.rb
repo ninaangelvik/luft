@@ -11,26 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170915085647) do
-
-  create_table "ar_internal_metadata", primary_key: "key", force: :cascade do |t|
-    t.string   "value",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "books", force: :cascade do |t|
-    t.string   "title",        limit: 255
-    t.string   "author",       limit: 255
-    t.date     "published_on"
-    t.text     "description",  limit: 65535
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "image_url",    limit: 255
-    t.string   "creator_id",   limit: 255
-  end
-
-  add_index "books", ["creator_id"], name: "index_books_on_creator_id", using: :btree
+ActiveRecord::Schema.define(version: 20170919141234) do
 
   create_table "datafiles", force: :cascade do |t|
     t.string   "filename",   limit: 255, null: false
@@ -41,17 +22,15 @@ ActiveRecord::Schema.define(version: 20170915085647) do
   end
 
   create_table "weather_data", force: :cascade do |t|
-    t.float    "latitude",    limit: 24,  null: false
-    t.float    "longitude",   limit: 24,  null: false
-    t.float    "dust",        limit: 24,  null: false
-    t.integer  "humidity",    limit: 4,   null: false
-    t.integer  "temperature", limit: 4,   null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.string   "group",       limit: 255
+    t.float    "latitude",    limit: 24, null: false
+    t.float    "longitude",   limit: 24, null: false
+    t.integer  "humidity",    limit: 4,  null: false
+    t.integer  "temperature", limit: 4,  null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.datetime "timestamp"
+    t.float    "pm_ten",      limit: 24
+    t.float    "pm_two_five", limit: 24
   end
-
-  add_index "weather_data", ["latitude", "longitude"], name: "index_weather_data_on_time_and_latitude_and_longitude", unique: true, using: :btree
 
 end

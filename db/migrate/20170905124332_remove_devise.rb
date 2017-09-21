@@ -1,4 +1,4 @@
-class RemoveDevise < ActiveRecord::Migration[5.0]
+class RemoveDevise < ActiveRecord::Migration
   def change
     drop_table :users
   end

@@ -17,9 +17,4 @@ class HomeController < ApplicationController
   def health
     head :ok, content_type: "text/html"
   end
-
-  def say
-    ProcessInputJob.perform_later(params[:name])
-    render plain: "ok"
-  end
 end

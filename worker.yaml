@@ -25,7 +25,7 @@ env_variables:
   MYSQL_SOCKET_PATH: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt
   PUBSUB_TOPIC: ProcessInputQueue
   PUBSUB_VERIFICATION_TOKEN: chaecoleix9Ooghoa2mah8ohshooZein
-  FORMATION: worker=2
+  FORMATION: worker=2, health_check=1
 # [END formation]
 
 health_check:

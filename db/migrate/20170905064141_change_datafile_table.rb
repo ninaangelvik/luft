@@ -1,4 +1,4 @@
-class ChangeDatafileTable < ActiveRecord::Migration[5.0]
+class ChangeDatafileTable < ActiveRecord::Migration
   def up
     remove_column :datafiles, :data, :binary
 
