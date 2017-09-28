@@ -1,6 +1,6 @@
 require 'csv'
 
-file = "#{ENV['HOME']}/Documents/test_file.csv"
+file = "#{ENV['HOME']}/Documents/test_file_600.csv"
 
 CSV.open(file, 'w+') do |csv|
 	csv <<  [ 
@@ -23,7 +23,7 @@ CSV.open(file, 'w+') do |csv|
 
 	# i = 0
 	# while i < 60
-	5000.times do |t|
+	300.times do |t|
 		time = (Time.now + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		csv <<  [	time,
 						 	latitude_tromso,

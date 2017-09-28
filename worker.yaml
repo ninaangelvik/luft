@@ -25,15 +25,11 @@ env_variables:
   MYSQL_SOCKET_PATH: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt
   PUBSUB_TOPIC: ProcessInputQueue
   PUBSUB_VERIFICATION_TOKEN: chaecoleix9Ooghoa2mah8ohshooZein
-  FORMATION: worker=2, health_check=1
+  FORMATION: worker=5
 # [END formation]
 
 health_check:
-  enable_health_check: true
-  check_interval_sec: 10
-  timeout_sec: 4
-  unhealthy_threshold: 2
-  healthy_threshold: 2
+  enable_health_check: false
 
 beta_settings:
   cloud_sql_instances: masteroppgave-177911:europe-west1:luftprosjekt

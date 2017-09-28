@@ -11,14 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170919141234) do
+ActiveRecord::Schema.define(version: 20170925070240) do
 
   create_table "datafiles", force: :cascade do |t|
-    t.string   "filename",   limit: 255, null: false
-    t.string   "filetype",   limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "size",       limit: 4
+    t.string   "filename",          limit: 255, null: false
+    t.string   "filetype",          limit: 255
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "size",              limit: 4
+    t.string   "original_filename", limit: 255, null: false
   end
 
   create_table "weather_data", force: :cascade do |t|

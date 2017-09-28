@@ -50,10 +50,11 @@ group :development do
 end
 
 # Added at 2017-09-05 12:49:56 +0200 by nina:
-gem "foreman", "~> 0.64.0"
+gem "foreman", "~> 0.83.0"
 
 gem "omniauth"
 gem "omniauth-google-oauth2"
 gem "fog"
-gem 'google-cloud-pubsub', require: 'google/cloud/pubsub'
+gem 'google-cloud-pubsub', '~> 0.26.0', require: 'google/cloud/pubsub'
 gem "google-api-client", "~> 0.13.6"
+gem 'httparty'

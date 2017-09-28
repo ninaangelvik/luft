@@ -4,14 +4,15 @@ class ProcessInputJob < ActiveJob::Base
   def perform(data)
     # Do something later
     begin 
+      start = Time.now
       Rails.logger.info "Entering perform_later"
       puts "Entering perform_later"
       csv_text = data.split("\n")
       csv_text.each do |line|
         # pp line
         if line.include? "Time" or line.blank?
-          Rails.logger.info "Skipping line"
-          puts "Skipping line"
+          # Rails.logger.info "Skipping line"
+          # puts "Skipping line"
           next
         end
         if line.include? (";")
@@ -20,8 +21,8 @@ class ProcessInputJob < ActiveJob::Base
           objects = line.split(",")
         end
 
-        Rails.logger.error "Row was not parsed correctly" if objects.empty?
-        puts objects
+        # Rails.logger.error "Row was not parsed correctly" if objects.empty?
+        # puts objects
         unless objects.empty?
           begin 
             record = WeatherData.new
@@ -40,6 +41,10 @@ class ProcessInputJob < ActiveJob::Base
           end
         end
       end
+      stop = Time.now
+      Rails.logger.info "Done processing"
+      Rails.logger.info "Time spent: #{stop - start}"
+      puts "Time spent: #{stop - start}"
       return true
     rescue => e
       Rails.logger.error "Something went wrong #{e.to_s}"

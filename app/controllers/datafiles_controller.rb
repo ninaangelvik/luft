@@ -15,6 +15,7 @@ class DatafilesController < ApplicationController
     begin 
       datafile = Datafile.new do |f| 
         f.filename = generate_filename(input_file.original_filename)
+        f.original_filename = input_file.original_filename
         f.filetype = input_file.content_type
         f.size = input_file.size
       end
@@ -72,7 +73,7 @@ class DatafilesController < ApplicationController
   private
 
   def generate_filename(filename)
-    existing_files = Datafile.where(filename: filename)
+    existing_files = Datafile.where(original_filename: filename)
 
     unless existing_files.empty?
       ext = File.extname(filename)
