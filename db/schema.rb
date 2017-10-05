@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170925070240) do
+ActiveRecord::Schema.define(version: 20171003120235) do
 
   create_table "datafiles", force: :cascade do |t|
     t.string   "filename",          limit: 255, null: false
@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 20170925070240) do
   end
 
   create_table "weather_data", force: :cascade do |t|
-    t.float    "latitude",    limit: 24, null: false
-    t.float    "longitude",   limit: 24, null: false
+    t.float    "latitude",    limit: 53, null: false
+    t.float    "longitude",   limit: 53, null: false
     t.integer  "humidity",    limit: 4,  null: false
     t.integer  "temperature", limit: 4,  null: false
     t.datetime "created_at",             null: false

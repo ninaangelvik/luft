@@ -26,13 +26,13 @@ class ProcessInputJob < ActiveJob::Base
         unless objects.empty?
           begin 
             record = WeatherData.new
-            record.timestamp    = objects[0].to_time.in_time_zone("Copenhagen")  
-            record.latitude     = objects[1]
-            record.longitude    = objects[2]
-            record.pm_ten       = objects[3] 
-            record.pm_two_five  = objects[4] 
-            record.humidity     = objects[5]
-            record.temperature  = objects[6]
+            record.timestamp    = objects[0].to_time  
+            record.latitude     = objects[1].to_f
+            record.longitude    = objects[2].to_f
+            record.pm_ten       = objects[3].to_f 
+            record.pm_two_five  = objects[4].to_f
+            record.humidity     = objects[5].to_f
+            record.temperature  = objects[6].to_f
             
             record.save! 
           rescue => error

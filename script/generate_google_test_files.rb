@@ -1,6 +1,6 @@
 require 'csv'
 
-file = "#{ENV['HOME']}/Documents/test_file_600.csv"
+file = "#{ENV['HOME']}/Documents/google_test_file.csv"
 
 CSV.open(file, 'w+') do |csv|
 	csv <<  [ 
@@ -16,14 +16,12 @@ CSV.open(file, 'w+') do |csv|
 	longitude_tromso = "18.94482"
 	latitude_bodo = "67.2915999"
 	longitude_bodo = "14.4123474"
-	pm_ten = "220"
-	pm_two_five = "33"
+	pm_ten = "21"
+	pm_two_five = "33.33"
 	humidity =  "46"
 	temperature = "12"
 
-	# i = 0
-	# while i < 60
-	300.times do |t|
+	10.times do |t|
 		time = (Time.now + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		csv <<  [	time,
 						 	latitude_tromso,
@@ -41,9 +39,6 @@ CSV.open(file, 'w+') do |csv|
 						  humidity,
 						  temperature
 						]
-		# i += 1
-
-		# puts csv.length
 	end
 	
 end

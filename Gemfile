@@ -58,3 +58,4 @@ gem "fog"
 gem 'google-cloud-pubsub', '~> 0.26.0', require: 'google/cloud/pubsub'
 gem "google-api-client", "~> 0.13.6"
 gem 'httparty'
+gem 'geocoder'

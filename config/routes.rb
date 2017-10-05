@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get 'files/get_id', to: 'datafiles#get_id'
   get 'files/get_data', to: 'datafiles#get_data'
   get '/_ah/health', to: 'home#health'
+  get '/download', to: 'weather_data#download'
+  get '/get_data', to: 'weather_data#get_data'
 
   resource :datafiles, only:[:create]
 end
