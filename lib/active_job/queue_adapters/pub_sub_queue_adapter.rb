@@ -28,10 +28,6 @@ module ActiveJob
         subscription = pubsub.subscription "InputSubscription"
         subscription = topic.create_subscription "InputSubscription" unless subscription.exists? 
 
-      
-        # subscriber = subscription.listen do |message|
-        # msgs = subscription.wait_for_messages 
-        # msgs.each do |message|
         subscription.listen do |message|
           Rails.logger.error "Process input request (#{message.data})"
           filename  = message.data

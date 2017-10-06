@@ -92,7 +92,7 @@ class WeatherDataController < ApplicationController
 			return false
 		end 		
 		
-		records =	WeatherData.where(:timestamp => from..to)
+		records =	WeatherData.where(:timestamp => from..to) unless params[:all]
 
 		if params[:within]
 			within = params[:within][1...-1].split(",")
@@ -111,6 +111,7 @@ class WeatherDataController < ApplicationController
 				records = area_recs
 			end
 		end
+		pp records.count
 		return true, filename, records
 	end
 
