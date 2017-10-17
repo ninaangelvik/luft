@@ -1,2 +1,2 @@
 web: bundle exec rails server -p 8080
-worker: bundle exec rake run_worker VERBOSE=true
+worker: bundle exec rake run_worker

@@ -1,7 +1,7 @@
 require 'csv'
+require 'active_support/core_ext/integer/time'
 
-
-file = "#{ENV['HOME']}/Documents/heroku/heroku_test_file_#{ARGV[0]}_#{ARGV[1]}.csv"
+file = "#{ENV['HOME']}/Documents/heroku/heroku_test_file_#{ARGV[0]}_#{ARGV[1]}_3.csv"
 CSV.open(file, 'w+') do |csv|
 	csv <<  [ 
 						"Time",
@@ -35,7 +35,7 @@ CSV.open(file, 'w+') do |csv|
 	temperature = "12"
 
 	ARGV[1].to_i.times do |t|
-		time = (Time.now + t*60).strftime "%d/%m/%Y %H:%M:%S"
+		time = (Time.now + 2.weeks + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		csv <<  [	time,
 						 	latitude,
 							longitude,

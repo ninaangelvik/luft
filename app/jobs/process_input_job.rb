@@ -2,49 +2,31 @@ class ProcessInputJob < ActiveJob::Base
   queue_as :default
 
   def perform(data)
-    # Do something later
     begin 
       start = Time.now
       Rails.logger.info "Entering perform_later"
       puts "Entering perform_later"
       csv_text = data.split("\n")
+      csv_text = csv_text.reject{|line| line.include?("Time") || line.blank?}
+    
+      records = []
       csv_text.each do |line|
-        # pp line
-        if line.include? "Time" or line.blank?
-          # Rails.logger.info "Skipping line"
-          # puts "Skipping line"
-          next
-        end
         if line.include? (";")
           objects = line.split(";")
         elsif line.include? (",")        
           objects = line.split(",")
         end
 
-        # Rails.logger.error "Row was not parsed correctly" if objects.empty?
-        # puts objects
-        unless objects.empty?
-          begin 
-            record = WeatherData.new
-            record.timestamp    = objects[0].to_time  
-            record.latitude     = objects[1].to_f
-            record.longitude    = objects[2].to_f
-            record.pm_ten       = objects[3].to_f 
-            record.pm_two_five  = objects[4].to_f
-            record.humidity     = objects[5].to_f
-            record.temperature  = objects[6].to_f
-            
-            record.save! 
-          rescue => error
-            Rails.logger.error "Could not add row due to #{error.to_s}"
-            next
-          end
-        end
+        records << WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f)
       end
+
+      WeatherData.import records
+
       stop = Time.now
       Rails.logger.info "Done processing"
-      Rails.logger.info "Time spent: #{stop - start}"
-      puts "Time spent: #{stop - start}"
+      Rails.logger.info "Time spent in total: #{stop - start}"
+
+      puts "Time spent in total: #{stop - start}"
       return true
     rescue => e
       Rails.logger.error "Something went wrong #{e.to_s}"

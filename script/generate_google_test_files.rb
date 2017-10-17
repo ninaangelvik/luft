@@ -1,6 +1,8 @@
 require 'csv'
+require 'active_support/core_ext/integer/time'
 
-file = "#{ENV['HOME']}/Documents/google/google_test_file_#{ARGV[0]}_#{ARGV[1]}.csv"
+
+file = "#{ENV['HOME']}/Documents/google/google_test_file_#{ARGV[0]}_#{ARGV[1]}_1.csv"
 
 CSV.open(file, 'w+') do |csv|
 	csv <<  [ 
@@ -12,6 +14,7 @@ CSV.open(file, 'w+') do |csv|
 						"Humidity",
 						"Temperature"
 					]
+
 	case ARGV[0]
 	when "tromso"
 		latitude = "69.650581"	
@@ -19,7 +22,17 @@ CSV.open(file, 'w+') do |csv|
 	when "bodo"
 		latitude = "67.2915999"
 		longitude = "14.4123474"
+	when "harstad"
+		latitude = "68.785187"
+		longitude = "16.4478438"
+	when "alta"
+		latitude = "69.9664488"
+		longitude = "23.2570952"
+	when "kirkenes"
+		latitude = "69.7241713"
+		longitude = "30.0407674"	
 	end
+
 
 	pm_ten = "21"
 	pm_two_five = "33.33"
@@ -27,7 +40,7 @@ CSV.open(file, 'w+') do |csv|
 	temperature = "12"
 
 	ARGV[1].to_i.times do |t|
-		time = (Time.now + t*60).strftime "%d/%m/%Y %H:%M:%S"
+		time = (Time.now + 1.week + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		csv <<  [	time,
 						 	latitude,
 							longitude,
