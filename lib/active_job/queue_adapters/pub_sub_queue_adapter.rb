@@ -32,11 +32,12 @@ module ActiveJob
           Rails.logger.error "Process input request (#{message.data})"
           filename  = message.data
           file = StorageBucket.files.get(filename)
-          ret = ProcessInputJob.perform_now file.body unless file.nil?
-
-          message.acknowledge! if ret == true
-          unless ret == true
-            pp ret
+          if file.nil?
+            pp "File not found"
+            message.acknowledge!
+          else
+            ret = ProcessInputJob.perform_now file.body
+            message.acknowledge! if ret == true
           end
         end
       end

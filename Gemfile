@@ -9,7 +9,7 @@ gem 'sqlite3', group: :development
 gem 'mysql2', '~> 0.4.8', group: :production
 gem 'sequel', group: :production
 
-gem 'appengine', "~> 0.4.1"
+gem 'appengine', "0.4.3"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -61,3 +61,4 @@ gem 'httparty'
 gem 'geocoder'
 gem 'activerecord-import'
 gem 'google-gax', '0.8.10'
+gem 'grpc', '1.6.2'

@@ -25,7 +25,7 @@ class ProcessInputJob < ActiveJob::Base
       end
 
       WeatherData.import records unless records.empty?
-
+     
       stop = Time.now
       Rails.logger.info "Done processing"
       Rails.logger.info "Time spent in total: #{stop - start}"

@@ -40,7 +40,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    appengine (0.4.4)
+    appengine (0.4.3)
       google-cloud-env (~> 1.0)
       stackdriver (~> 0.7)
     arel (6.0.4)
@@ -336,7 +336,7 @@ GEM
       multi_json (~> 1.11)
       os (~> 0.9)
       signet (~> 0.7)
-    grpc (1.6.7)
+    grpc (1.6.2)
       google-protobuf (~> 3.1)
       googleapis-common-protos-types (~> 1.0.0)
       googleauth (~> 0.5.1)
@@ -509,7 +509,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
-  appengine (~> 0.4.1)
+  appengine (= 0.4.3)
   autoprefixer-rails
   bootstrap-sass (~> 3.2.0)
   byebug
@@ -521,6 +521,7 @@ DEPENDENCIES
   google-cloud
   google-cloud-pubsub (~> 0.26.0)
   google-gax (= 0.8.10)
+  grpc (= 1.6.2)
   httparty
   jbuilder (~> 2.0)
   jquery-rails

@@ -18,7 +18,7 @@ mysql_settings: &mysql_settings
   password: <%= ENV["MYSQL_PASSWORD"] %>
   database: <%= ENV["MYSQL_DATABASE"] %>
   socket: <%= ENV["MYSQL_SOCKET_PATH"] %>
-  dataset_id: masteroppgave-177911  
+  dataset_id: luft-184208  
 
 development:
   adapter: mysql2
@@ -26,10 +26,10 @@ development:
   pool: 5
   timeout: 5000
   username: test
-  password: test12345
-  database: masteroppgave
-  socket: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt
-  dataset_id: masteroppgave-177911  
+  password: iequ9ieliebeeGiepoh0deeveevoung8
+  database: luft
+  socket: /cloudsql/luft-184208:europe-west1:luft
+  dataset_id: luft-184208
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

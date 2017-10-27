@@ -2,7 +2,7 @@ require 'csv'
 require 'active_support/core_ext/integer/time'
 
 
-file = "#{ENV['HOME']}/Documents/google/google_test_file_#{ARGV[0]}_#{ARGV[1]}_1.csv"
+file = "#{ENV['HOME']}/Documents/google/google_test_file_#{ARGV[0]}_#{ARGV[1]}.csv"
 
 CSV.open(file, 'w+') do |csv|
 	csv <<  [ 
@@ -40,7 +40,7 @@ CSV.open(file, 'w+') do |csv|
 	temperature = "12"
 
 	ARGV[1].to_i.times do |t|
-		time = (Time.now + 1.week + t*60).strftime "%d/%m/%Y %H:%M:%S"
+		time = (Time.now + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		csv <<  [	time,
 						 	latitude,
 							longitude,

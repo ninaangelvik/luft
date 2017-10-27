@@ -35,9 +35,6 @@ Rails.application.configure do
   # when problems arise.
   config.log_level = :ERROR
 
-  config.google_cloud.trace.project_id = Rails.application.config.x.settings["project_id"]
-  config.google_cloud.trace.keyfile    = ENV["GOOGLE_APPLICATION_CREDENTIALS"]
-
   config.logger = Logger.new(STDOUT)
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]

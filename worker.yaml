@@ -19,18 +19,21 @@ entrypoint: bundle exec foreman start --formation "$FORMATION"
 # [START formation]
 env_variables:
   SECRET_KEY_BASE: 63077c247615df200d667c77ca65ad4de37ffb523aa03f6b59a9139d82189b9e483e8487994e354dd3723e6115e45c5d3b2a492447cedf721fbc5a7432ff94dd
-  MYSQL_USER: luftprosjekt
+  MYSQL_USER: luft
   MYSQL_PASSWORD: eitheigaip4Ex4es5aideweigu4Oopho
-  MYSQL_DATABASE: masteroppgave
-  MYSQL_SOCKET_PATH: /cloudsql/masteroppgave-177911:europe-west1:luftprosjekt
+  MYSQL_DATABASE: luft
+  MYSQL_SOCKET_PATH: /cloudsql/luft-184208:europe-west1:luft
   PUBSUB_TOPIC: ProcessInputQueue
-  PUBSUB_VERIFICATION_TOKEN: chaecoleix9Ooghoa2mah8ohshooZein
   FORMATION: worker=5
 # [END formation]
 
 health_check:
-  enable_health_check: false
+  enable_health_check: true
+  check_interval_sec: 10
+  timeout_sec: 10
+  unhealthy_threshold: 2
+  healthy_threshold: 2
 
 beta_settings:
-  cloud_sql_instances: masteroppgave-177911:europe-west1:luftprosjekt
+  cloud_sql_instances: luft-184208:europe-west1:luft
 

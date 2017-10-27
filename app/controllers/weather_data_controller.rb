@@ -105,7 +105,7 @@ class WeatherDataController < ApplicationController
 				radius = within[2].to_f
 				area_recs = []
 
-				records.each do |r|
+				records.find_each do |r|
 					area_recs << r if (Geocoder::Calculations.distance_between([latitude, longitude], [r.latitude, r.longitude], :units=>:km) < radius)
 				end
 				records = area_recs

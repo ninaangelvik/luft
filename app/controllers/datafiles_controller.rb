@@ -11,7 +11,7 @@ class DatafilesController < ApplicationController
       flash[:error] = "Filen er ikke av type '.csv'. Vennligst prøv en annen fil."
       redirect_to root_path and return
     end
-
+    
     begin 
       datafile = Datafile.new do |f| 
         f.filename = generate_filename(input_file.original_filename)
