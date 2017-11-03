@@ -11,6 +11,9 @@ class ProcessInputJob < ActiveJob::Base
       csv_text = csv_text.reject{|line| line.include?("Time") || line.blank?}
      
       records = []
+     
+      radius = 8.0
+      area_recs = []
 
       csv_text.each do |line|
         if line.include? (";")
@@ -20,12 +23,25 @@ class ProcessInputJob < ActiveJob::Base
         end
 
         unless objects.empty?
-          records << WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f)
+          r = WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f)
+          WeatherData::AREAS.each do |k, v| 
+            if (Geocoder::Calculations.distance_between([v[0], v[1]], [r.latitude, r.longitude], :units=>:km) < 8)
+              r.area = k
+              break
+            end
+          end
+          records << r   
         end
       end
 
+      Rails.logger.info "Records are ready"
+      puts "Records are ready"
+
       WeatherData.import records unless records.empty?
-     
+
+      Rails.logger.info "Records are imported"
+      puts "Records are imported"
+
       stop = Time.now
       Rails.logger.info "Done processing"
       Rails.logger.info "Time spent in total: #{stop - start}"

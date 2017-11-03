@@ -37,17 +37,21 @@ CSV.open(file, 'w+') do |csv|
 	pm_ten = "21"
 	pm_two_five = "33.33"
 	humidity =  "46"
-	temperature = "12"
-
+	temperature = 0
+	growing = false
 	ARGV[1].to_i.times do |t|
-		time = (Time.now + t*60).strftime "%d/%m/%Y %H:%M:%S"
+		time = ((Time.now - 1.day) + t*60).strftime "%d/%m/%Y %H:%M:%S"
+		growing ? temperature += 1 : (temperature -= 1) 
+		
+		growing = !growing if (t % 30 == 0)
+		
 		csv <<  [	time,
 						 	latitude,
 							longitude,
 							pm_ten,
 							pm_two_five,
 							humidity,
-							temperature
+							temperature.to_s
 						]
 		# csv <<  [	time,
 		# 				  latitude_bodo,

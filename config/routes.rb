@@ -3,8 +3,8 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  post 'home/upload'
-  get 'home/download'
+  post '/upload', to: 'datafiles#create'
+  get '/download', to: 'home#download'
   get 'files', to: 'datafiles#index'
   get 'files/get_id', to: 'datafiles#get_id'
   get 'files/get_data', to: 'datafiles#get_data'

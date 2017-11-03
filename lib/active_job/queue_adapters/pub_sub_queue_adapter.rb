@@ -28,17 +28,20 @@ module ActiveJob
         subscription = pubsub.subscription "InputSubscription"
         subscription = topic.create_subscription "InputSubscription" unless subscription.exists? 
 
-        subscription.listen do |message|
+        subscription.listen max: 1 do |message|
           Rails.logger.error "Process input request (#{message.data})"
           filename  = message.data
           file = StorageBucket.files.get(filename)
-          if file.nil?
-            pp "File not found"
-            message.acknowledge!
-          else
-            ret = ProcessInputJob.perform_now file.body
-            message.acknowledge! if ret == true
-          end
+          ret = ProcessInputJob.perform_now file.body
+          message.acknowledge! if ret == true
+          
+          # if file.nil?
+          #   pp "File not found"
+          #   message.acknowledge!
+          # else
+          #   ret = ProcessInputJob.perform_now file.body
+          #   message.acknowledge! if ret == true
+          # end
         end
       end
     end

@@ -5,7 +5,7 @@ class DatafilesController < ApplicationController
   end 
 
   def create
-    input_file = params[:datafile][:file]
+    input_file = params[:uploadfile]
     
     if input_file.content_type != "text/csv"
       flash[:error] = "Filen er ikke av type '.csv'. Vennligst prøv en annen fil."

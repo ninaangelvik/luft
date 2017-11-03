@@ -94,22 +94,19 @@ class WeatherDataController < ApplicationController
 		
 		records =	WeatherData.where(:timestamp => from..to) unless params[:all]
 
-		if params[:within]
-			within = params[:within][1...-1].split(",")
-			
-			if within.count > 3
-				return false 
-			else  
-				latitude = within[0].to_f
-				longitude = within[1].to_f
-				radius = within[2].to_f
-				area_recs = []
+		if params[:area]
+			# within = params[:within][1...-1].split(",")
+			area = AREAS[params[:area]]
+	
+			latitude = area[0].to_f
+			longitude = area[1].to_f
+			radius = 8.0
+			area_recs = []
 
-				records.find_each do |r|
-					area_recs << r if (Geocoder::Calculations.distance_between([latitude, longitude], [r.latitude, r.longitude], :units=>:km) < radius)
-				end
-				records = area_recs
+			records.find_each do |r|
+				area_recs << r if (Geocoder::Calculations.distance_between([latitude, longitude], [r.latitude, r.longitude], :units=>:km) < radius)
 			end
+			records = area_recs
 		end
 		pp records.count
 		return true, filename, records
