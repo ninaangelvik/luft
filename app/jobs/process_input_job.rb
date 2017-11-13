@@ -3,6 +3,7 @@ class ProcessInputJob < ActiveJob::Base
 
   def perform(data)
     begin 
+      pp data
       start = Time.now
       Rails.logger.info "Entering perform_later"
       puts "Entering perform_later"

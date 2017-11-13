@@ -3,7 +3,12 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  post '/upload', to: 'datafiles#create'
+  namespace :api do 
+    post '/upload' => 'api_datafiles#create'
+  end
+
+
+  # post '/upload', to: 'datafiles#create'
   get '/download', to: 'home#download'
   get 'files', to: 'datafiles#index'
   get 'files/get_id', to: 'datafiles#get_id'
@@ -11,6 +16,6 @@ Rails.application.routes.draw do
   get '/_ah/health', to: 'home#health'
   get '/download', to: 'weather_data#download'
   get '/get_data', to: 'weather_data#get_data'
-
   resource :datafiles, only:[:create]
+
 end

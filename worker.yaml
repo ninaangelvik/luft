@@ -24,7 +24,7 @@ env_variables:
   MYSQL_DATABASE: luft
   MYSQL_SOCKET_PATH: /cloudsql/luft-184208:europe-west1:luft
   PUBSUB_TOPIC: ProcessInputQueue
-  FORMATION: worker=3
+  FORMATION: worker=50
 # [END formation]
 
 health_check:

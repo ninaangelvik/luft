@@ -4,37 +4,34 @@ class DatafilesController < ApplicationController
     @files = Datafile.all
   end 
 
-  def create
-    input_file = params[:uploadfile]
-    
-    if input_file.content_type != "text/csv"
-      flash[:error] = "Filen er ikke av type '.csv'. Vennligst prøv en annen fil."
-      redirect_to root_path and return
-    end
-    
+  def create  
     begin 
       datafile = Datafile.new do |f| 
-        f.filename = generate_filename(input_file.original_filename)
-        f.original_filename = input_file.original_filename
-        f.filetype = input_file.content_type
-        f.size = input_file.size
+        f.filename = generate_filename(params["Filename"])
+        f.original_filename = params["Filename"]
+        f.filetype = params["ContentType"]
+        f.size = params["Size"]
       end
        
       if datafile.save
         file = StorageBucket.files.new(
           key: "#{datafile.filename}",
-          body: input_file.read,
+          body: params["Body"],
           public: false
         )
         if file.save
           ProcessInputJob.perform_later(datafile.filename)
-          flash[:success] = "Filen ble lastet opp"
-          redirect_to root_path
+          render json: {
+            status: 200,
+            message: "Successfully uploaded file",
+          }.to_json
         end
       end
     rescue => error
-      flash[:error] = "Filen kunne ikke lastes opp. #{error.to_s}"
-      redirect_to root_path
+      render json: {
+            status: 500,
+            message: "Successfully created todo list.",
+          }.to_json
     end
   end  
   
