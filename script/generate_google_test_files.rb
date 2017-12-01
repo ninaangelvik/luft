@@ -17,8 +17,8 @@ CSV.open(file, 'w+') do |csv|
 
 	case ARGV[0]
 	when "tromso"
-		latitude = "69.650581"	
-		longitude = "18.94482"
+		latitude = 69.650581	
+		longitude = 18.94482
 	when "bodo"
 		latitude = "67.2915999"
 		longitude = "14.4123474"
@@ -42,12 +42,13 @@ CSV.open(file, 'w+') do |csv|
 	ARGV[1].to_i.times do |t|
 		time = ((Time.now - 2.hours) + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		growing ? temperature += 1 : (temperature -= 1) 
+		growing ? latitude += 0.0001 : longitude += 0.0001
 		
 		growing = !growing if (t % 30 == 0)
 		
 		csv <<  [	time,
-						 	latitude,
-							longitude,
+						 	latitude.to_s,
+							longitude.to_s,
 							pm_ten,
 							pm_two_five,
 							humidity,
