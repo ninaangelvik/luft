@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   namespace :api do 
     post '/upload' => 'api_datafiles#create'
+    get '/data' => 'api_weather_data#get_data'
   end
 
 

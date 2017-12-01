@@ -40,7 +40,7 @@ CSV.open(file, 'w+') do |csv|
 	temperature = 0
 	growing = false
 	ARGV[1].to_i.times do |t|
-		time = ((Time.now - 1.day) + t*60).strftime "%d/%m/%Y %H:%M:%S"
+		time = ((Time.now - 2.hours) + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		growing ? temperature += 1 : (temperature -= 1) 
 		
 		growing = !growing if (t % 30 == 0)

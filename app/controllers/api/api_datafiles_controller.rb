@@ -24,6 +24,7 @@ class Api::ApiDatafilesController < ApiController
     	self.response_body = "500 Internal Error"
     end
   end
+  
   private
 
   def generate_filename(filename)
