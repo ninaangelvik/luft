@@ -13,11 +13,7 @@ env_variables:
 
 
 health_check:
-  enable_health_check: true
-  check_interval_sec: 10
-  timeout_sec: 4
-  unhealthy_threshold: 2
-  healthy_threshold: 2
-
+  enable_health_check: False
+  
 beta_settings:
   cloud_sql_instances: luft-184208:europe-west1:luft

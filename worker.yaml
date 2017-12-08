@@ -24,16 +24,12 @@ env_variables:
   MYSQL_DATABASE: luft
   MYSQL_SOCKET_PATH: /cloudsql/luft-184208:europe-west1:luft
   PUBSUB_TOPIC: ProcessInputQueue
-  FORMATION: worker=50
+  FORMATION: worker=20
 # [END formation]
 
 health_check:
-  enable_health_check: true
-  check_interval_sec: 10
-  timeout_sec: 10
-  unhealthy_threshold: 2
-  healthy_threshold: 2
-
+  enable_health_check: False
+  
 beta_settings:
   cloud_sql_instances: luft-184208:europe-west1:luft
 

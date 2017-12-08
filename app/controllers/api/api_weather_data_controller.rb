@@ -3,7 +3,6 @@ require 'time'
 class Api::ApiWeatherDataController < ApiController
 
 	def get_data 
-		pp params
 		ret, records = find_records(params)	
 		if ret == false 
 			self.response_body = "400 Bad Request"
@@ -26,7 +25,6 @@ class Api::ApiWeatherDataController < ApiController
 		case 
 		when params[:all]
 			records = WeatherData.all.pluck(:latitude, :longitude, :humidity, :temperature, :pm_ten, :pm_two_five, :timestamp)
-	 #    filename = "records-all.csv"
 	 		return true, records
 	  when (params[:fromtime] and params[:totime])
 	  	from = params[:fromtime].to_time
@@ -36,8 +34,6 @@ class Api::ApiWeatherDataController < ApiController
 			to = params[:totime].to_time
 	  	to = Time.parse(to.strftime('%Y-%m-%d %H:%M:%S UTC')).to_s
 			to = to.in_time_zone
-			pp to
-			# records =	WeatherData.where(:timestamp => from..to).select(:latitude, :longitude, :humidity, :temperature, :pm_ten, :pm_two_five, :timestamp)
 			records =	WeatherData.where("timestamp between ? and ?", from, to).pluck(:latitude, :longitude, :humidity, :temperature, :pm_ten, :pm_two_five, :timestamp, :area)
 		else
 			return false, nil
@@ -64,7 +60,6 @@ class Api::ApiWeatherDataController < ApiController
 			end
 			records = area_recs
 		end
-		pp records.count
 		return true, records
 	end
 end

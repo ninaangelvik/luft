@@ -13,6 +13,7 @@ module ActiveJob
 
       def self.enqueue job
         Rails.logger.info "[PubSubQueueAdapter] enqueue job #{job.inspect}"
+        pp "[PubSubQueueAdapter] enqueue job #{job.inspect}"
 
         filename  = job.arguments.first
         topic = pubsub.topic "ProcessInputQueue"
@@ -31,10 +32,11 @@ module ActiveJob
 
         subscription.listen do |message|
           Rails.logger.error "Process input request (#{message.data})"
-          # pp "Process input request (#{message.data})"
+          pp "Process input request (#{message.data})"
           filename  = message.data
           file = StorageBucket.files.get(filename)
           ret = ProcessInputJob.perform_now file.body
+          pp ret
           message.acknowledge! if ret == true
           
           # if file.nil?
