@@ -15,6 +15,7 @@ class HomeController < ApplicationController
   end
 
   def health
-    head :ok, content_type: "text/html"
+    self.response_body = "200 OK"
+    # head :ok, content_type: "text/html"
   end
 end

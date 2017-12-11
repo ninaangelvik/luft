@@ -1,9 +1,11 @@
 class ProcessInputJob < ActiveJob::Base
   queue_as :default
 
-  def perform(data)
+  def perform(filename)
     begin 
       start = Time.now
+      file = StorageBucket.files.get(filename)
+      data = file.body
       Rails.logger.info "Entering perform_later"
       puts "Entering perform_later"
       csv_text = data.split("\n")

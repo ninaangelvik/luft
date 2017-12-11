@@ -34,8 +34,9 @@ module ActiveJob
           Rails.logger.error "Process input request (#{message.data})"
           pp "Process input request (#{message.data})"
           filename  = message.data
-          file = StorageBucket.files.get(filename)
-          ret = ProcessInputJob.perform_now file.body
+          # file = StorageBucket.files.get(filename)
+          ret = ProcessInputJob.perform_now filename
+          # ret = ProcessInputJob.perform_now file.body
           pp ret
           message.acknowledge! if ret == true
           

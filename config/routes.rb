@@ -18,5 +18,4 @@ Rails.application.routes.draw do
   get '/download', to: 'weather_data#download'
   get '/get_data', to: 'weather_data#get_data'
   resource :datafiles, only:[:create]
-
 end
