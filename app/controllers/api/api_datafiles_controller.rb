@@ -8,7 +8,6 @@ class Api::ApiDatafilesController < ApiController
         f.filetype = params["ContentType"]
         f.size = params["Size"]
       end
-       
       if datafile.save
         file = StorageBucket.files.new(
           key: "#{datafile.filename}",
@@ -21,6 +20,7 @@ class Api::ApiDatafilesController < ApiController
         end
       end
     rescue => error
+      pp error
     	self.response_body = "500 Internal Error"
     end
   end

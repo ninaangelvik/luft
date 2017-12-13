@@ -14,7 +14,7 @@
 runtime: custom
 env: flex
 service: worker
-entrypoint: bundle exec foreman start --formation "$FORMATION"
+entrypoint: bundle exec activejob-google_cloud_pubsub-worker
 manual_scaling: 
   instances: 3
 

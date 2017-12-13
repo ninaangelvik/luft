@@ -1,4 +1,4 @@
-class ProcessInputJob < ActiveJob::Base
+class ProcessInputJob < ApplicationJob
   queue_as :default
 
   def perform(filename)

@@ -24,6 +24,11 @@ GEM
     activejob (4.2.8)
       activesupport (= 4.2.8)
       globalid (>= 0.3.0)
+    activejob-google_cloud_pubsub (0.6.0)
+      activejob
+      activesupport
+      concurrent-ruby
+      google-cloud-pubsub (~> 0.26.0)
     activemodel (4.2.8)
       activesupport (= 4.2.8)
       builder (~> 3.1)
@@ -508,6 +513,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activejob-google_cloud_pubsub (~> 0.6.0)
   activerecord-import
   appengine (= 0.4.3)
   autoprefixer-rails

@@ -8,7 +8,14 @@ Bundler.require(*Rails.groups)
 
 module AirPollution
   class Application < Rails::Application
-    config.active_job.queue_adapter = :pub_sub_queue
+    config.active_job.queue_adapter = ActiveJob::GoogleCloudPubsub::Adapter.new(
+      async:  false,
+      logger: nil,
+      pubsub: Google::Cloud::Pubsub.new(
+        project: 'luft-184208',
+        keyfile: Rails.root.join('credentials', 'luft-cbbb936544ad.json')
+      )
+    )
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
