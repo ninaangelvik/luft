@@ -1,28 +1,15 @@
-== README
+To deploy to Google Cloud 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+SERVER: 
+Ensure that the last line in Dockerfile is:
+CMD exec bundle exec foreman start --formation "$FORMATION" -f Procfile
 
-Things you may want to cover:
+then deploy with the command
+" gcloud app deploy app.yaml "
 
-* Ruby version
+WORKER: 
+Ensure that last line in the Dockerfile is:
+CMD bundle exec activejob-google_cloud_pubsub-worker
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+then deploy with the command
+" gcloud app deploy worker.yaml "

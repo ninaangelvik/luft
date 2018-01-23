@@ -15,14 +15,19 @@ runtime: custom
 env: flex
 service: worker
 entrypoint: bundle exec activejob-google_cloud_pubsub-worker
-manual_scaling: 
-  instances: 3
+automatic_scaling:
+  min_num_instances: 1 
+  max_num_instances: 5
+  cpu_utilization: 
+    target_utilization: 0.8
 
-resources:
-  cpu: 2
-  memory_gb: 6.5
+# manual_scaling: 
+#   instances: 5
 
-
+# resources:
+#   cpu: 4
+#   memory_gb: 6
+#   disk_size_gb: 10
 
 # [START formation]
 env_variables:
@@ -31,8 +36,6 @@ env_variables:
   MYSQL_PASSWORD: eitheigaip4Ex4es5aideweigu4Oopho
   MYSQL_DATABASE: luft
   MYSQL_SOCKET_PATH: /cloudsql/luft-184208:europe-west1:luft
-  PUBSUB_TOPIC: ProcessInputQueue
-  FORMATION: worker=20
 # [END formation]
 
 health_check:

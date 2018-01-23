@@ -11,10 +11,10 @@ class Api::ApiWeatherDataController < ApiController
 		unless records.empty?
 	  	csv_string = CSV.generate do |csv|
 	  		records.each do |r|
-	  			csv << r
+	  			csv << [r.longitude, r.latitude, r.humidity, r.temperature, r.pm_ten, r.pm_two_five, r.timestamp]
 	  		end
 			end
-	  	self.response_body = csv_string		
+	  	self.response_body = csv_string
 	  else
 	  	self.response_body = ""
 	  end
@@ -34,7 +34,9 @@ class Api::ApiWeatherDataController < ApiController
 			to = params[:totime].to_time
 	  	to = Time.parse(to.strftime('%Y-%m-%d %H:%M:%S UTC')).to_s
 			to = to.in_time_zone
-			records =	WeatherData.where("timestamp between ? and ?", from, to).pluck(:latitude, :longitude, :humidity, :temperature, :pm_ten, :pm_two_five, :timestamp, :area)
+			records = WeatherData.find_by_sql([ "SELECT longitude, latitude, avg(humidity) AS humidity, avg(temperature) AS temperature, 
+																					 avg(pm_ten) as pm_ten, avg(pm_two_five) as pm_two_five, area, timestamp 
+																					 FROM weather_data GROUP BY longitude, latitude"])
 		else
 			return false, nil
 		end
@@ -50,13 +52,13 @@ class Api::ApiWeatherDataController < ApiController
 			area_recs = []
 
 			records.each do |r|
-				area_recs << r if (Geocoder::Calculations.distance_between([latitude, longitude], [r[0], r[1]], :units=>:km) < radius)
+				area_recs << r if (Geocoder::Calculations.distance_between([latitude, longitude], [r.latitude, r.longitude], :units=>:km) < radius)
 			end
 			records = area_recs
 		elsif params[:area]
 			area_recs = []
 			records.each do |r|
-				area_recs << r if r[-1] == params[:area]
+				area_recs << r if r.area == params[:area]
 			end
 			records = area_recs
 		end

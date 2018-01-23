@@ -3,10 +3,19 @@ class ProcessInputJob < ApplicationJob
 
   def perform(filename)
     begin 
+      #File has already been imported, skip file to avoid duplicate entries
+      return true if WeatherData.where(filename: "#{filename}").exists?
+
       start = Time.now
+
       file = StorageBucket.files.get(filename)
+      
+      while file.nil?
+        file = StorageBucket.files.get(filename)
+      end
+
       data = file.body
-      Rails.logger.info "Entering perform_later"
+      # Rails.logger.info "Entering perform_later"
       puts "Entering perform_later"
       csv_text = data.split("\n")
 
@@ -25,7 +34,7 @@ class ProcessInputJob < ApplicationJob
         end
 
         unless objects.empty?
-          r = WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f)
+          r = WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f, filename: filename)
           WeatherData::AREAS.each do |k, v| 
             if (Geocoder::Calculations.distance_between([v[0], v[1]], [r.latitude, r.longitude], :units=>:km) < 8)
               r.area = k
@@ -36,22 +45,22 @@ class ProcessInputJob < ApplicationJob
         end
       end
 
-      Rails.logger.info "Records are ready"
-      puts "Records are ready"
+      # Rails.logger.info "Records are ready"
+      # puts "Records are ready"
 
       WeatherData.import records unless records.empty?
 
-      Rails.logger.info "Records are imported"
-      puts "Records are imported"
+      # Rails.logger.info "Records are imported"
+      # puts "Records are imported"
 
       stop = Time.now
       Rails.logger.info "Done processing"
-      Rails.logger.info "Time spent in total: #{stop - start}"
-      puts "Time spent in total: #{stop - start}"
+      # Rails.logger.info "Time spent in total: #{stop - start}"
+      puts "Time spent in total for file #{filename}: #{stop - start}"
       return true
     rescue => e
-      Rails.logger.error "Something went wrong #{e.to_s}"
-      puts "Something went wrong #{e.to_s}"
+      Rails.logger.error "Something went wrong with file #{filename}. Error: #{e.to_s}"
+      puts "Something went wrong with file #{filename}. Error: #{e.to_s}"
       return e
     end
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171102114808) do
+ActiveRecord::Schema.define(version: 20180115143553) do
 
   create_table "datafiles", force: :cascade do |t|
     t.string   "filename",          limit: 255, null: false
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20171102114808) do
     t.float    "pm_ten",      limit: 24
     t.float    "pm_two_five", limit: 24
     t.string   "area",        limit: 255, default: ""
+    t.string   "filename",    limit: 255,              null: false
   end
 
 end

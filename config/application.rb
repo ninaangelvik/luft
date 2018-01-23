@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 module AirPollution
   class Application < Rails::Application
     config.active_job.queue_adapter = ActiveJob::GoogleCloudPubsub::Adapter.new(
-      async:  false,
+      async:  true,
       logger: nil,
       pubsub: Google::Cloud::Pubsub.new(
         project: 'luft-184208',

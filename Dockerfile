@@ -54,4 +54,5 @@ RUN if test -d app/assets -a -f config/application.rb; then \
 ENTRYPOINT []
 
 # Start application on port $PORT.
-CMD bundle exec activejob-google_cloud_pubsub-worker
+CMD bundle exec activejob-google_cloud_pubsub-worker --max_threads=5
+#CMD exec bundle exec foreman start --formation "$FORMATION" -f Procfile

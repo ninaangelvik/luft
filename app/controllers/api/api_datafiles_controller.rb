@@ -20,7 +20,6 @@ class Api::ApiDatafilesController < ApiController
         end
       end
     rescue => error
-      pp error
     	self.response_body = "500 Internal Error"
     end
   end
