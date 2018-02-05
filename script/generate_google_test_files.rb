@@ -2,7 +2,7 @@ require 'csv'
 require 'active_support/core_ext/integer/time'
 
 
-file = "#{ENV['HOME']}/Documents/google/google_test_file_#{ARGV[0]}_#{ARGV[1]}.csv"
+file = "#{ENV['HOME']}/Documents/google/google_test_file_#{ARGV[0]}_#{ARGV[1]}_3.csv"
 
 CSV.open(file, 'w+') do |csv|
 	csv <<  [ 
@@ -33,7 +33,6 @@ CSV.open(file, 'w+') do |csv|
 		longitude = "30.0407674"	
 	end
 
-
 	pm_ten = "21"
 	pm_two_five = "33.33"
 	humidity =  "46"
@@ -42,10 +41,10 @@ CSV.open(file, 'w+') do |csv|
 	ARGV[1].to_i.times do |t|
 		time = ((Time.now - 2.hours) + t*60).strftime "%d/%m/%Y %H:%M:%S"
 		growing ? temperature += 1 : (temperature -= 1) 
-		growing ? latitude += 0.0001 : longitude += 0.0001
+		growing ? latitude += 0.001 : longitude += 0.001
 		
 		growing = !growing if (t % 30 == 0)
-		
+	
 		csv <<  [	time,
 						 	latitude.to_s,
 							longitude.to_s,

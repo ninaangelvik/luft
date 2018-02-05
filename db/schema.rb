@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180115143553) do
+ActiveRecord::Schema.define(version: 20180126130728) do
 
   create_table "datafiles", force: :cascade do |t|
     t.string   "filename",          limit: 255, null: false
@@ -23,17 +23,17 @@ ActiveRecord::Schema.define(version: 20180115143553) do
   end
 
   create_table "weather_data", force: :cascade do |t|
-    t.float    "latitude",    limit: 53,               null: false
-    t.float    "longitude",   limit: 53,               null: false
-    t.integer  "humidity",    limit: 4,                null: false
-    t.integer  "temperature", limit: 4,                null: false
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.datetime "timestamp"
-    t.float    "pm_ten",      limit: 24
-    t.float    "pm_two_five", limit: 24
-    t.string   "area",        limit: 255, default: ""
-    t.string   "filename",    limit: 255,              null: false
+    t.decimal  "latitude",                precision: 10, scale: 6,              null: false
+    t.decimal  "longitude",               precision: 10, scale: 6,              null: false
+    t.integer  "humidity",    limit: 4,                                         null: false
+    t.integer  "temperature", limit: 4,                                         null: false
+    t.datetime "created_at",                                                    null: false
+    t.datetime "updated_at",                                                    null: false
+    t.datetime "timestamp",                                                     null: false
+    t.float    "pm_ten",      limit: 24,                                        null: false
+    t.float    "pm_two_five", limit: 24,                                        null: false
+    t.string   "area",        limit: 255,                          default: ""
+    t.string   "filename",    limit: 255,                                       null: false
   end
 
 end

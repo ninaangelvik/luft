@@ -1,6 +1,11 @@
 class WeatherData < ActiveRecord::Base
 	AREAS = { 
 		"Tromsø" 	=> [69.680, 18.95],
-    "Bodø" 		=> [67.28, 14.405]
+    "Bodø" 		=> [67.28, 14.405],
+    "Narvik"      => [68.438, 17.427],
+    "Alta"        => [69.971, 23.303],
+    "Nord-Troms"  => [69.929, 20.999],
+    "Harstad"     => [68.798, 16.541],
+    "Lakselv"     => [70.051, 24.971]
 	}
 end

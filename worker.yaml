@@ -17,17 +17,10 @@ service: worker
 entrypoint: bundle exec activejob-google_cloud_pubsub-worker
 automatic_scaling:
   min_num_instances: 1 
-  max_num_instances: 5
-  cpu_utilization: 
-    target_utilization: 0.8
+  max_num_instances: 15
+  cpu_utilization:
+    target_utilization: 0.3
 
-# manual_scaling: 
-#   instances: 5
-
-# resources:
-#   cpu: 4
-#   memory_gb: 6
-#   disk_size_gb: 10
 
 # [START formation]
 env_variables:

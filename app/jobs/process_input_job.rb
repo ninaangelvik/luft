@@ -4,7 +4,10 @@ class ProcessInputJob < ApplicationJob
   def perform(filename)
     begin 
       #File has already been imported, skip file to avoid duplicate entries
-      return true if WeatherData.where(filename: "#{filename}").exists?
+      if WeatherData.where(filename: "#{filename}").exists?
+        puts "Records from #{filename} already exists in the database."
+        return true 
+      end 
 
       start = Time.now
 
@@ -32,9 +35,12 @@ class ProcessInputJob < ApplicationJob
         elsif line.include? (",")        
           objects = line.split(",")
         end
-
         unless objects.empty?
-          r = WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f, filename: filename)
+          begin 
+            r = WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f, filename: filename)
+          rescue => e
+            next
+          end
           WeatherData::AREAS.each do |k, v| 
             if (Geocoder::Calculations.distance_between([v[0], v[1]], [r.latitude, r.longitude], :units=>:km) < 8)
               r.area = k
