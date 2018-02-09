@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180126130728) do
+ActiveRecord::Schema.define(version: 20180209134237) do
 
   create_table "datafiles", force: :cascade do |t|
     t.string   "filename",          limit: 255, null: false
@@ -25,8 +25,8 @@ ActiveRecord::Schema.define(version: 20180126130728) do
   create_table "weather_data", force: :cascade do |t|
     t.decimal  "latitude",                precision: 10, scale: 6,              null: false
     t.decimal  "longitude",               precision: 10, scale: 6,              null: false
-    t.integer  "humidity",    limit: 4,                                         null: false
-    t.integer  "temperature", limit: 4,                                         null: false
+    t.float    "humidity",    limit: 24,                                        null: false
+    t.float    "temperature", limit: 24,                                        null: false
     t.datetime "created_at",                                                    null: false
     t.datetime "updated_at",                                                    null: false
     t.datetime "timestamp",                                                     null: false
@@ -35,5 +35,7 @@ ActiveRecord::Schema.define(version: 20180126130728) do
     t.string   "area",        limit: 255,                          default: ""
     t.string   "filename",    limit: 255,                                       null: false
   end
+
+  add_index "weather_data", ["filename"], name: "index_weather_data_on_filename", using: :btree
 
 end

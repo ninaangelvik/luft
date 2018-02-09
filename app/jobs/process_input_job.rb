@@ -3,13 +3,9 @@ class ProcessInputJob < ApplicationJob
 
   def perform(filename)
     begin 
-      #File has already been imported, skip file to avoid duplicate entries
       if WeatherData.where(filename: "#{filename}").exists?
         puts "Records from #{filename} already exists in the database."
-        return true 
       end 
-
-      start = Time.now
 
       file = StorageBucket.files.get(filename)
       
@@ -18,7 +14,6 @@ class ProcessInputJob < ApplicationJob
       end
 
       data = file.body
-      # Rails.logger.info "Entering perform_later"
       puts "Entering perform_later"
       csv_text = data.split("\n")
 
@@ -28,8 +23,8 @@ class ProcessInputJob < ApplicationJob
      
       radius = 8.0
       area_recs = []
-
       csv_text.each do |line|
+        objects = []
         if line.include? (";")
           objects = line.split(";")
         elsif line.include? (",")        
@@ -51,23 +46,13 @@ class ProcessInputJob < ApplicationJob
         end
       end
 
-      # Rails.logger.info "Records are ready"
-      # puts "Records are ready"
-
       WeatherData.import records unless records.empty?
 
-      # Rails.logger.info "Records are imported"
-      # puts "Records are imported"
-
-      stop = Time.now
       Rails.logger.info "Done processing"
-      # Rails.logger.info "Time spent in total: #{stop - start}"
-      puts "Time spent in total for file #{filename}: #{stop - start}"
-      return true
     rescue => e
       Rails.logger.error "Something went wrong with file #{filename}. Error: #{e.to_s}"
       puts "Something went wrong with file #{filename}. Error: #{e.to_s}"
-      return e
+      ProcessInputJob.perform_later(filename)
     end
   end
 end

@@ -10,10 +10,8 @@ puts "Starting clock for #{filename} x #{NUM_FILES.to_i} "
 start = Time.now
 
 while file_count < NUM_FILES.to_i do 
-	file_count = WeatherData.find_by_sql([ "SELECT DISTINCT(filename)
-																					 FROM weather_data 
-																					 WHERE filename 
-																					 LIKE ?", "time_uploads_10080%"]).count
+	sleep(3.seconds)
+	file_count = WeatherData.uniq.pluck(:filename).count
 end 
 
 stop = Time.now

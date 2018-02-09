@@ -35,11 +35,12 @@ class Api::ApiWeatherDataController < ApiController
 	  	to = Time.parse(to.strftime('%Y-%m-%d %H:%M:%S UTC')).to_s
 			to = to.in_time_zone
 			
-			records = WeatherData.find_by_sql([ "SELECT longitude, latitude, avg(humidity) AS humidity, avg(temperature) AS temperature, 
-																					 avg(pm_ten) as pm_ten, avg(pm_two_five) as pm_two_five, area, timestamp  
-																					 FROM weather_data 
-																					 WHERE timestamp BETWEEN '#{from}' AND '#{to}'
-																					 GROUP BY longitude, latitude, timestamp"])
+			records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"])
+			# records = WeatherData.find_by_sql([ "SELECT longitude, latitude, avg(humidity) AS humidity, avg(temperature) AS temperature, 
+			# 																		 avg(pm_ten) as pm_ten, avg(pm_two_five) as pm_two_five, area, timestamp  
+			# 																		 FROM weather_data 
+			# 																		 WHERE timestamp BETWEEN '#{from}' AND '#{to}'
+			# 																		 GROUP BY longitude, latitude, timestamp"])
 		else
 			return false, nil
 		end
@@ -65,8 +66,6 @@ class Api::ApiWeatherDataController < ApiController
 			end
 			records = area_recs
 		end
-
-		pp records.first
 
 		return true, records
 	end
