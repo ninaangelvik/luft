@@ -5,12 +5,20 @@ class ProcessInputJob < ApplicationJob
     begin 
       if WeatherData.where(filename: "#{filename}").exists?
         puts "Records from #{filename} already exists in the database."
+        return
       end 
 
       file = StorageBucket.files.get(filename)
       
+      puts filename 
+      i = 0
       while file.nil?
+        if i == 30
+          puts "Kunne ikke finne fil: #{filename}"
+          return 
+        end
         file = StorageBucket.files.get(filename)
+        i += 1
       end
 
       data = file.body
@@ -30,10 +38,22 @@ class ProcessInputJob < ApplicationJob
         elsif line.include? (",")        
           objects = line.split(",")
         end
-        unless objects.empty?
+        unless objects.empty? or objects.count != 7
           begin 
-            r = WeatherData.new(timestamp: objects[0].to_time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f, filename: filename)
+            time = objects[0][0..18] + ".0Z"
+            time = time.to_time
+          rescue ArgumentError 
+            next
+          end
+
+          if validate_location(objects[1].to_f, objects[2].to_f) == false
+            next
+          end
+          
+          begin 
+            r = WeatherData.new(timestamp: time, latitude: objects[1].to_f, longitude: objects[2].to_f, pm_ten: objects[3].to_f, pm_two_five: objects[4].to_f, humidity: objects[5].to_f, temperature: objects[6].to_f, filename: filename)
           rescue => e
+            puts e
             next
           end
           WeatherData::AREAS.each do |k, v| 
@@ -45,7 +65,6 @@ class ProcessInputJob < ApplicationJob
           records << r   
         end
       end
-
       WeatherData.import records unless records.empty?
 
       Rails.logger.info "Done processing"
@@ -54,5 +73,12 @@ class ProcessInputJob < ApplicationJob
       puts "Something went wrong with file #{filename}. Error: #{e.to_s}"
       ProcessInputJob.perform_later(filename)
     end
+  end
+
+  private
+
+  def validate_location(latitude, longitude)
+    return false if (latitude == 0) or (longitude == 0)
+    return true
   end
 end
