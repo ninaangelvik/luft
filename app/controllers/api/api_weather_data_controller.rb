@@ -8,13 +8,19 @@ class Api::ApiWeatherDataController < ApiController
 			self.response_body = "400 Bad Request"
 			return 
 		end
+		puts params
 		unless records.empty?
-	  	csv_string = CSV.generate do |csv|
-	  		records.each do |r|
-	  			csv << [r.longitude, r.latitude, r.humidity, r.temperature, r.pm_ten, r.pm_two_five, r.timestamp]
-	  		end
+			if params[:plotmap]
+				data_json = aggregateMapData(records)
+			elsif params[:plotchart]
+				data_json = aggregateChartData(records, params[:fromtime], params[:totime])
+			else 
+		  	data_json = []
+		  	records.each do |r|
+		  		data_json << {'Latitude' => r.latitude.to_s.to_f, 'Longitude' => r.longitude.to_s.to_f, 'Humidity' => r.humidity, 'Temperature' => r.temperature, 'PmTen' => r.pm_ten, 'PmTwoFive' => r.pm_two_five, 'Date' => r.timestamp.to_s}
+				end
 			end
-	  	self.response_body = csv_string
+	  	self.response_body = data_json.to_json
 	  else
 	  	self.response_body = ""
 	  end
@@ -37,17 +43,10 @@ class Api::ApiWeatherDataController < ApiController
 
 			time_span = (to.to_date - from.to_date).to_i
 
-
-			records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).group(:timestamp)
-			# records = WeatherData.find_by_sql([ "SELECT longitude, latitude, avg(humidity) AS humidity, avg(temperature) AS temperature, 
-			# 																		 avg(pm_ten) as pm_ten, avg(pm_two_five) as pm_two_five, area, timestamp  
-			# 																		 FROM weather_data 
-			# 																		 WHERE timestamp BETWEEN '#{from}' AND '#{to}'
-			# 																		 GROUP BY longitude, latitude, timestamp"])
+			records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).order(:timestamp)
 		else
 			return false, nil
 		end
-
 		if params[:within]
 			within = params[:within].split(",")
 			if within.count < 3
@@ -57,19 +56,68 @@ class Api::ApiWeatherDataController < ApiController
 			longitude = within[1].to_f
 			radius = within[2].to_f
 			area_recs = []
-
 			records.each do |r|
-				area_recs << r if (Geocoder::Calculations.distance_between([latitude, longitude], [r.latitude, r.longitude], :units=>:km) < radius)
+				area_recs << r if Geocoder::Calculations.distance_between([latitude, longitude], [r.latitude, r.longitude], :units=>:km) < radius
 			end
 			records = area_recs
 		elsif params[:area]
-			area_recs = []
-			records.each do |r|
-				area_recs << r if r.area == params[:area]
-			end
+			area_recs = records.where(area: params[:area])
 			records = area_recs
 		end
 
+
 		return true, records
+	end
+
+	def aggregateMapData(records)
+		data = []
+		records.group_by{|r| [r.latitude.round(4), r.longitude.round(4)]}.each do |key, value|
+			pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/value.count
+			pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
+			humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
+			temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
+			data << {'Latitude' => key[0].to_s.to_f, 'Longitude' => key[1].to_s.to_f, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => ""}
+		end
+		return data
+	end
+
+	def aggregateChartData(records, from, to)
+		duration = ((to.to_time).minus_with_coercion(from.to_time)) / 3600
+		data = []
+		#number of hours
+		if duration <= 1 
+			records.group_by{|r| r.timestamp.strftime('%FT%H:%M')}.each do |key, value|
+				pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/value.count
+				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
+				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
+				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+			end
+		elsif duration <= 24
+			records.group_by{|r| r.timestamp.strftime('%FT%H')}.each do |key, value|
+				pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/value.count
+				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
+				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
+				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+			end
+		elsif duration <= 744
+			records.group_by{|r| r.timestamp.strftime('%F')}.each do |key, value|
+				pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/value.count
+				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
+				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
+				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+			end
+		else 
+			records.group_by{|r| r.timestamp.strftime('%Y-%m')}.each do |key, value|
+				pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/value.count
+				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
+				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
+				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+			end
+		end
+		return data
 	end
 end

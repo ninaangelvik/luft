@@ -35,7 +35,6 @@ begin
         end
       end
       records << r   
-      puts records.count
     end
   end
 rescue => e
