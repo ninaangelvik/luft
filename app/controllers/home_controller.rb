@@ -14,6 +14,14 @@ class HomeController < ApplicationController
     send_file(Rails.root.join('tmp', '#{file.filename}.csv'), :filename => file.filename)
   end
 
+  def ready
+    self.response_body = "200 OK"
+  end
+
+  def alive
+    self.response_body = "200 OK"
+  end
+
   def health
     self.response_body = "200 OK"
   end

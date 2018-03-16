@@ -8,7 +8,6 @@ class Api::ApiWeatherDataController < ApiController
 			self.response_body = "400 Bad Request"
 			return 
 		end
-		puts params
 		unless records.empty?
 			if params[:plotmap]
 				data_json = aggregateMapData(records)
@@ -17,7 +16,7 @@ class Api::ApiWeatherDataController < ApiController
 			else 
 		  	data_json = []
 		  	records.each do |r|
-		  		data_json << {'Latitude' => r.latitude.to_s.to_f, 'Longitude' => r.longitude.to_s.to_f, 'Humidity' => r.humidity, 'Temperature' => r.temperature, 'PmTen' => r.pm_ten, 'PmTwoFive' => r.pm_two_five, 'Date' => r.timestamp.to_s}
+		  		data_json << {'Latitude' => r.latitude.to_s.to_f, 'Longitude' => r.longitude.to_s.to_f, 'Humidity' => r.humidity, 'Temperature' => r.temperature, 'PmTen' => r.pm_ten, 'PmTwoFive' => r.pm_two_five, 'Date' => r.timestamp.utc.to_s}
 				end
 			end
 	  	self.response_body = data_json.to_json
@@ -35,11 +34,11 @@ class Api::ApiWeatherDataController < ApiController
 	  when (params[:fromtime] and params[:totime])
 	  	from = params[:fromtime].to_time
 	  	from = Time.parse(from.strftime('%Y-%m-%d %H:%M:%S UTC')).to_s
-	  	from = from.in_time_zone
+	  	from = from.in_time_zone('Copenhagen')
 
 			to = params[:totime].to_time
 	  	to = Time.parse(to.strftime('%Y-%m-%d %H:%M:%S UTC')).to_s
-			to = to.in_time_zone
+			to = to.in_time_zone('Copenhagen')
 
 			time_span = (to.to_date - from.to_date).to_i
 
