@@ -75,7 +75,7 @@ class Api::ApiWeatherDataController < ApiController
 			pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
 			humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
 			temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
-			data << {'Latitude' => key[0].to_s.to_f, 'Longitude' => key[1].to_s.to_f, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => ""}
+			data << {'Latitude' => key[0].to_s.to_f, 'Longitude' => key[1].to_s.to_f, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => ""}
 		end
 		return data
 	end
@@ -90,7 +90,7 @@ class Api::ApiWeatherDataController < ApiController
 				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
 				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
 				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
-				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 			end
 		elsif duration <= 24
 			records.group_by{|r| r.timestamp.strftime('%FT%H')}.each do |key, value|
@@ -98,7 +98,7 @@ class Api::ApiWeatherDataController < ApiController
 				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
 				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
 				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
-				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 			end
 		elsif duration <= 744
 			records.group_by{|r| r.timestamp.strftime('%F')}.each do |key, value|
@@ -106,7 +106,7 @@ class Api::ApiWeatherDataController < ApiController
 				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
 				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
 				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
-				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 			end
 		else 
 			records.group_by{|r| r.timestamp.strftime('%Y-%m')}.each do |key, value|
@@ -114,7 +114,7 @@ class Api::ApiWeatherDataController < ApiController
 				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/value.count
 				humidity = value.collect {|v| v.humidity}.reduce(:+)/value.count
 				temperature = value.collect {|v| v.temperature}.reduce(:+)/value.count
-				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten, 'PmTwoFive' => pm_two_five, 'Humidity' => humidity, 'Temperature' => temperature, 'Date' => key}
+				data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 			end
 		end
 		return data
