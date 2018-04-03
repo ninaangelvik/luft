@@ -9,4 +9,8 @@ class WeatherData < ActiveRecord::Base
     "Lakselv"     => [70.051, 24.971],
     "Mo i Rana"   => [66.313, 14.142]
 	}
+
+    acts_as_mappable :default_units => :kms,
+                    :lat_column_name => :latitude,
+                    :lng_column_name => :longitude
 end
