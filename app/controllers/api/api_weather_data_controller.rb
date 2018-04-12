@@ -14,25 +14,24 @@ class Api::ApiWeatherDataController < ApiController
 			unless records.empty?
 				if params[:plotmap]
 					# start2 = Time.now
-					data_json = aggregateMapData(records)
+					records = aggregateMapData(records)
 					# stop2 = Time.now
 					# puts "Time spent aggregating map records: #{(stop2-start2).to_s}"
 				elsif params[:plotchart]
 					# start3 = Time.now
 					# data_json = aggregateChartData(records, params[:fromtime], params[:totime])
-					data_json = aggregateChartData(records, records.first.timestamp, records.last.timestamp)
+					records = aggregateChartData(records, records.first.timestamp, records.last.timestamp)
 					# stop3 = Time.now
 					# puts "Time spent aggregating chart records: #{(stop3-start3).to_s}"
-				else 
-					# start4 = Time.now
-			  	data_json = []
-			  	records.each do |r|
-			  		data_json << {'Latitude' => r.latitude.to_f, 'Longitude' => r.longitude.to_f, 'Humidity' => r.humidity, 'Temperature' => r.temperature, 'PmTen' => r.pm_ten, 'PmTwoFive' => r.pm_two_five, 'Date' => r.timestamp.utc.to_s}
-					end
-					# stop4 = Time.now
-					# puts "Time spent converting to json: #{(stop4-start4).to_s}"
-				end
-		  	self.response_body = data_json.to_json
+				end 
+				# 	start4 = Time.now
+			 #  	data_json = WeatherDataSerializer.new(records).serialized_json
+				# 	stop4 = Time.now
+				# 	puts "Time spent converting to json: #{(stop4-start4).to_s}"
+				# end
+				options = {}
+				options[:time] = "24hours"
+		  	self.response_body = WeatherDataSerializer.new(records, options).serialized_json
 		  else
 		  	self.response_body = ""
 		  end
@@ -52,7 +51,7 @@ class Api::ApiWeatherDataController < ApiController
 				to = to.in_time_zone('Copenhagen')
 
 				time_span = (to.to_date - from.to_date).to_i
-				records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).select(:longitude, :latitude, :pm_ten, :pm_two_five, :temperature, :humidity, :timestamp).order(:timestamp)
+				records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).select(:id, :longitude, :latitude, :pm_ten, :pm_two_five, :temperature, :humidity, :timestamp).order(:timestamp)
 				# records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).order(:timestamp)
 			else
 				return false, nil
@@ -92,7 +91,8 @@ class Api::ApiWeatherDataController < ApiController
 				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 				humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 				temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-				data << {'Latitude' => key[0].to_f, 'Longitude' => key[1].to_f, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => ""}
+				# data << {'Id' => 0, 'Latitude' => key[0].to_f, 'Longitude' => key[1].to_f, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => ""}
+        data << WeatherData.new(latitude: key[0].to_f, longitude: key[1].to_f, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: nil)
 			end
 			return data
 		end
@@ -117,25 +117,36 @@ class Api::ApiWeatherDataController < ApiController
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+        	data << WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key)
+					# data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 				end
-			elsif duration <= 24
-				records.group_by{|r| r.timestamp.strftime('%FT%H')}.each do |key, value|
+			elsif duration <= 48
+				puts "...."
+				records.group_by{|r| r.timestamp.strftime('%F %H')}.each do |key, value|
+					puts key
 					num_values = value.count
 					pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/num_values
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+					r = WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key.to_time)
+					puts r.timestamp
+					data << r
+        	# data << WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key)
+					# data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 				end
 			elsif duration <= 744
 				records.group_by{|r| r.timestamp.strftime('%F')}.each do |key, value|
+					puts key
 					num_values = value.count
 					pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/num_values
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+        	r = WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key.to_time)
+					puts r.timestamp
+					data << r
+					# data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 				end
 			else 
 				records.group_by{|r| r.timestamp.strftime('%Y-%m')}.each do |key, value|
@@ -144,7 +155,8 @@ class Api::ApiWeatherDataController < ApiController
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+        	data << WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key)
+					# data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
 				end
 			end
 			return data

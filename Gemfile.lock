@@ -80,6 +80,8 @@ GEM
     execjs (2.7.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
+    fast_jsonapi (1.1.1)
+      activesupport (>= 4.2)
     ffi (1.9.18)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
@@ -232,6 +234,10 @@ GEM
       thor (~> 0.19.1)
     formatador (0.2.5)
     geocoder (1.4.5)
+    geokit (1.11.0)
+    geokit-rails (2.3.0)
+      geokit (~> 1.5)
+      rails (>= 3.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     google-api-client (0.13.6)
@@ -373,7 +379,7 @@ GEM
     logging (2.2.2)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    loofah (2.1.1)
+    loofah (2.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
@@ -523,9 +529,11 @@ DEPENDENCIES
   bootstrap-sass (~> 3.2.0)
   byebug
   coffee-rails (~> 4.1.0)
+  fast_jsonapi
   fog
   foreman (~> 0.83.0)
   geocoder
+  geokit-rails
   google-api-client (~> 0.13.6)
   google-cloud
   google-cloud-pubsub (~> 0.26.0)
