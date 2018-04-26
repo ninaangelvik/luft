@@ -71,7 +71,6 @@ class ProcessInputJob < ApplicationJob
     rescue => e
       Rails.logger.error "Something went wrong with file #{filename}. Error: #{e.to_s}"
       puts "Something went wrong with file #{filename}. Error: #{e.to_s}"
-      ProcessInputJob.perform_later(filename)
     end
   end
 
