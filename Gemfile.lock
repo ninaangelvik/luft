@@ -232,6 +232,10 @@ GEM
       thor (~> 0.19.1)
     formatador (0.2.5)
     geocoder (1.4.5)
+    geokit (1.11.0)
+    geokit-rails (2.3.0)
+      geokit (~> 1.5)
+      rails (>= 3.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     google-api-client (0.13.6)
@@ -526,6 +530,7 @@ DEPENDENCIES
   fog
   foreman (~> 0.83.0)
   geocoder
+  geokit-rails
   google-api-client (~> 0.13.6)
   google-cloud
   google-cloud-pubsub (~> 0.26.0)
@@ -552,4 +557,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
