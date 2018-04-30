@@ -4,6 +4,11 @@ require 'json'
 
 times = []
 fetch_uris = [
+				#/api/data?totime=2018-04-29T11:39:48&fromtime=2018-04-22T11:39:48&within=68.7901066219617,16.51617647190406,1.9054457637927478&plotchart=true
+				#/api/data?totime=2018-04-29T11:39:48&fromtime=2018-04-22T11:39:48&within=68.7901066219617,16.51617647190406,1.9054457637927478&plotchart=map
+
+
+
 				# URI.escape("https://luft-184208.appspot.com/api/data?totime=2018-04-02T06:55:28&fromtime=2018-01-01T07:55:28&area=Lakselv&plotmap=true"),
 				# URI.escape("https://luft-184208.appspot.com/api/data?totime=2018-04-02T06:55:28&fromtime=2018-01-01T07:55:28&area=Lakselv&plotchart=true"),
 				# URI.escape("https://luft-184208.appspot.com/api/data?totime=2018-04-02T06:55:28&fromtime=2018-01-01T07:55:28&area=Tromsø&plotmap=true"),
