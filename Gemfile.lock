@@ -8,6 +8,13 @@ GIT
       concurrent-ruby
       google-cloud-pubsub (~> 0.26.0)
 
+GIT
+  remote: https://github.com/ninaangelvik/fast_jsonapi
+  revision: 325da930b048dde7604b7f651c7ddf0b10407283
+  specs:
+    fast_jsonapi (1.1.1)
+      activesupport (>= 4.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -70,7 +77,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
-    crass (1.0.3)
+    crass (1.0.4)
     debug_inspector (0.0.3)
     declarative (0.0.10)
     declarative-option (0.1.0)
@@ -377,7 +384,7 @@ GEM
     logging (2.2.2)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    loofah (2.1.1)
+    loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
@@ -393,7 +400,7 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mysql2 (0.4.10)
-    nokogiri (1.8.1)
+    nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     oauth2 (1.4.0)
       faraday (>= 0.8, < 0.13)
@@ -433,8 +440,8 @@ GEM
       activesupport (>= 4.2.0, < 5.0)
       nokogiri (~> 1.6)
       rails-deprecated_sanitizer (>= 1.0.1)
-    rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.0.4)
+      loofah (~> 2.2, >= 2.2.2)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -527,6 +534,7 @@ DEPENDENCIES
   bootstrap-sass (~> 3.2.0)
   byebug
   coffee-rails (~> 4.1.0)
+  fast_jsonapi!
   fog
   foreman (~> 0.83.0)
   geocoder
@@ -540,9 +548,11 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mysql2 (~> 0.4.8)
+  nokogiri (~> 1.8.2)
   omniauth
   omniauth-google-oauth2
   rails (= 4.2.8)
+  rails-html-sanitizer (~> 1.0.4)
   rails_12factor
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)

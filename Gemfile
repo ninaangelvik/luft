@@ -65,3 +65,6 @@ gem 'grpc', '1.6.2'
 # Added at 2017-12-13 13:32:51 +0100 by nina:
 gem "activejob-google_cloud_pubsub", :git => "https://github.com/ninaangelvik/activejob-google_cloud_pubsub-0.6.0" 
 gem 'geokit-rails'
+gem 'fast_jsonapi', :git => "https://github.com/ninaangelvik/fast_jsonapi"
+gem 'nokogiri', '~> 1.8.2'
+gem 'rails-html-sanitizer', '~> 1.0.4'

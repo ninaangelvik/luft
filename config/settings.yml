@@ -4,7 +4,7 @@ default: &default
     client_id: 277647672180-u0k36jj1f0ejab3obko9i8oje15u9dl4.apps.googleusercontent.com
     client_secret: r3F6Ht0q57PL2nQoAnc0AsJV
   cloud_storage:
-    bucket: luft
+    bucket: luft-184208.appspot.com
     access_key_id: GOOGDRRLGDJJHPXZFM2H
     secret_access_key: Nz3d9UXL20M/9p3sV5EJoJeejC4NdPBbOVMztLLM 
 

@@ -3,36 +3,22 @@ require 'time'
 class Api::ApiWeatherDataController < ApiController
 
 		def get_data 
-			# start1 = Time.now
 			ret, records = find_records(params)
-			# stop1 = Time.now
-			# puts "Time spent fetching #{records.length.to_s} records: #{(stop1-start1).to_s}"
 			if ret == false 
 				self.response_body = "400 Bad Request"
 				return 
 			end
+			time_interval = 0
 			unless records.empty?
 				if params[:plotmap]
-					# start2 = Time.now
-					data_json = aggregateMapData(records)
-					# stop2 = Time.now
-					# puts "Time spent aggregating map records: #{(stop2-start2).to_s}"
+					records = aggregateMapData(records)
 				elsif params[:plotchart]
-					# start3 = Time.now
-					# data_json = aggregateChartData(records, params[:fromtime], params[:totime])
-					data_json = aggregateChartData(records, records.first.timestamp, records.last.timestamp)
-					# stop3 = Time.now
-					# puts "Time spent aggregating chart records: #{(stop3-start3).to_s}"
-				else 
-					# start4 = Time.now
-			  	data_json = []
-			  	records.each do |r|
-			  		data_json << {'Latitude' => r.latitude.to_f, 'Longitude' => r.longitude.to_f, 'Humidity' => r.humidity, 'Temperature' => r.temperature, 'PmTen' => r.pm_ten, 'PmTwoFive' => r.pm_two_five, 'Date' => r.timestamp.utc.to_s}
-					end
-					# stop4 = Time.now
-					# puts "Time spent converting to json: #{(stop4-start4).to_s}"
-				end
-		  	self.response_body = data_json.to_json
+					from = records.first.timestamp
+					to = records.last.timestamp
+					records = aggregateChartData(records, from, to)
+					time_interval = ((to.to_time).minus_with_coercion(from.to_time)) / 3600
+				end 
+		  	self.response_body = WeatherDataSerializer.new(records, {params: {time_interval: time_interval}}).serialized_json
 		  else
 		  	self.response_body = ""
 		  end
@@ -52,8 +38,7 @@ class Api::ApiWeatherDataController < ApiController
 				to = to.in_time_zone('Copenhagen')
 
 				time_span = (to.to_date - from.to_date).to_i
-				records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).select(:longitude, :latitude, :pm_ten, :pm_two_five, :temperature, :humidity, :timestamp).order(:timestamp)
-				# records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).order(:timestamp)
+				records = WeatherData.where(["timestamp between ? and ?", "#{from}", "#{to}"]).select(:id, :longitude, :latitude, :pm_ten, :pm_two_five, :temperature, :humidity, :timestamp).order(:timestamp)
 			else
 				return false, nil
 			end
@@ -65,10 +50,7 @@ class Api::ApiWeatherDataController < ApiController
 				latitude = within[0].to_f
 				longitude = within[1].to_f
 				radius = within[2].to_f
-				# start6 = Time.now
 				records = records.within(radius, :origin => [latitude, longitude])
-				# stop6 = Time.now()
-				# puts "time calculating distance for #{records.length.to_s} records: #{(stop6-start6).to_s}"
 			elsif params[:area]
 				area_recs = records.where(area: params[:area])
 				records = area_recs
@@ -78,21 +60,13 @@ class Api::ApiWeatherDataController < ApiController
 
 		def aggregateMapData(records)
 			data = []
-			# num_records = records.length
-			# if num_records.between?(500, 1000)
-			# 	records = sample_data(records, num_records, 200) 
-			# elsif num_records.between?(1000, 5000)
-			# 	records = sample_data(records, num_records, 500) 
-			# elsif num_records > 5000
-			# 	records = sample_data(records, num_records, 1000) 
-			# end
 			records.group_by{|r| [r.latitude.round(4), r.longitude.round(4)]}.each do |key, value|
 				num_values = value.count
 				pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/num_values
 				pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 				humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 				temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-				data << {'Latitude' => key[0].to_f, 'Longitude' => key[1].to_f, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => ""}
+        data << WeatherData.new(latitude: key[0].to_f, longitude: key[1].to_f, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: nil)
 			end
 			return data
 		end
@@ -100,14 +74,6 @@ class Api::ApiWeatherDataController < ApiController
 		def aggregateChartData(records, from, to)
 			duration = ((to.to_time).minus_with_coercion(from.to_time)) / 3600
 			data = []
-			# num_records = records.length
-			# if num_records.between?(500, 1000)
-			# 	records = sample_data(records, num_records, 500) 
-			# elsif num_records.between?(1000, 5000)
-			# 	records = sample_data(records, num_records, 1000) 
-			# elsif num_records > 5000
-			# 	records = sample_data(records, num_records, 5000) 
-			# end
 			
 			#number of hours
 			if duration <= 1 
@@ -117,16 +83,17 @@ class Api::ApiWeatherDataController < ApiController
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+        	data << WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key)
 				end
-			elsif duration <= 24
-				records.group_by{|r| r.timestamp.strftime('%FT%H')}.each do |key, value|
+			elsif duration <= 168
+				records.group_by{|r| r.timestamp.strftime('%F %H')}.each do |key, value|
 					num_values = value.count
 					pm_ten = value.collect {|v| v.pm_ten}.reduce(:+)/num_values
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+					r = WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key.to_time)
+					data << r
 				end
 			elsif duration <= 744
 				records.group_by{|r| r.timestamp.strftime('%F')}.each do |key, value|
@@ -135,7 +102,8 @@ class Api::ApiWeatherDataController < ApiController
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+        	r = WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key.to_time)
+					data << r
 				end
 			else 
 				records.group_by{|r| r.timestamp.strftime('%Y-%m')}.each do |key, value|
@@ -144,7 +112,7 @@ class Api::ApiWeatherDataController < ApiController
 					pm_two_five = value.collect {|v| v.pm_two_five}.reduce(:+)/num_values
 					humidity = value.collect {|v| v.humidity}.reduce(:+)/num_values
 					temperature = value.collect {|v| v.temperature}.reduce(:+)/num_values
-					data << {'Latitude' => 0.0, 'Longitude' => 0.0, 'PmTen' => pm_ten.round(2), 'PmTwoFive' => pm_two_five.round(2), 'Humidity' => humidity.round(2), 'Temperature' => temperature.round(2), 'Date' => key}
+        	data << WeatherData.new(latitude: 0.0, longitude: 0.0, pm_ten: pm_ten.round(2), pm_two_five: pm_two_five.round(2), humidity: humidity.round(2), temperature: temperature.round(2), timestamp: key)
 				end
 			end
 			return data

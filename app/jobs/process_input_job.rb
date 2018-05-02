@@ -14,7 +14,7 @@ class ProcessInputJob < ApplicationJob
       i = 0
       while file.nil?
         if i == 30
-          puts "Kunne ikke finne fil: #{filename}"
+          puts "Could not retrieve file: #{filename}"
           return 
         end
         file = StorageBucket.files.get(filename)
