@@ -5,9 +5,7 @@ require 'json'
 file = ARGV[0]
 num_times = ARGV[1].to_i
 
-# filename = File.basename(file)
-uri = URI.parse("http://localhost:8000/lastopp")
-# uri = URI.parse("http://luft-184208.appspot.com/api/upload")
+uri = URI.parse("http://luft-184208.appspot.com/api/upload")
 
 file_content = File.read(file)
 
