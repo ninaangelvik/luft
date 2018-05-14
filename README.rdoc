@@ -1,4 +1,4 @@
-= \To deploy to Google Cloud </p>
+= \To deploy to Google Cloud 
 
 == Server:
 Ensure that the last line in Dockerfile is:  
