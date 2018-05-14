@@ -1,26 +1,27 @@
 To deploy to Google Cloud 
 
-SERVER: 
-Ensure that the last line in Dockerfile is:
+SERVER:
+
+Ensure that the last line in Dockerfile is:  
 CMD exec bundle exec foreman start --formation "$FORMATION" -f Procfile
 
-then deploy with the command
-" gcloud app deploy app.yaml "
-
-WORKER: 
-Ensure that last line in the Dockerfile is:
-CMD bundle exec activejob-google_cloud_pubsub-worker
-
-then deploy with the command
-" gcloud app deploy worker.yaml "
-
-
-SCRIPTS AND DATASETS USED IN AIR:BIT PLATFORM EVALUATION:
-script/generate_test_files.rb: Generates synthetic air:bit datasets.
-script/get_size_distribution.rb: Categorizes data log files in the air:bit database by size.
-script/test_upload_performance.rb: Uploads the provided file to the air:bit backend n number of times.
-script/time_uploads.rb: Queries database for filenames, to determine when uploads are complete.
-script/test_download_performance.rb: Sends data query requests to the frontend web server and measures query time.
-
-/benchmark/time_uploads_10080.csv: The synthetic 717kB dataset.
-/benchmark/time_uploads_44640.csv: The synthetic 3.2MB dataset.
+then deploy with the command  
+" gcloud app deploy app.yaml "  
+  
+WORKER:  
+Ensure that last line in the Dockerfile is:  
+CMD bundle exec activejob-google_cloud_pubsub-worker  
+  
+then deploy with the command  
+" gcloud app deploy worker.yaml "  
+  
+  
+SCRIPTS AND DATASETS USED IN AIR:BIT PLATFORM EVALUATION:  
+script/generate_test_files.rb: Generates synthetic air:bit datasets.  
+script/get_size_distribution.rb: Categorizes data log files in the air:bit database by size.  
+script/test_upload_performance.rb: Uploads the provided file to the air:bit backend n number of times.  
+script/time_uploads.rb: Queries database for filenames, to determine when uploads are complete.  
+script/test_download_performance.rb: Sends data query requests to the frontend web server and measures query time.  
+  
+/benchmark/time_uploads_10080.csv: The synthetic 717kB dataset.  
+/benchmark/time_uploads_44640.csv: The synthetic 3.2MB dataset.  
