@@ -16,6 +16,7 @@
 !/log/.keep
 /tmp
 .env
+/credentials/*
 
 /config/*.json
 /cloud_sql_proxy
